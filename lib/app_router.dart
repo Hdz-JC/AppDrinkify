@@ -1,32 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'controllers/auth_controller.dart';
+import 'views/inicio_app.dart';
+import 'views/login_view.dart';
+import 'views/registro_view.dart';
 import 'views/home_view.dart';
 import 'views/favoritos_view.dart';
 import 'views/agregar_view.dart';
 import 'views/listas_view.dart';
-import 'views/login_view.dart';
-import 'views/registro_view.dart';
 
 GoRouter createRouter(AuthController authController) {
   return GoRouter(
-    initialLocation: '/login',
-    refreshListenable: authController,
+    initialLocation: '/inicio',
+    //refreshListenable: authController, // escucha cambios en auth
     redirect: (context, state) {
-      final loggedIn = authController.isLoggedIn;
-      final location = state.uri.toString(); // reemplazo de 'subloc'
-      final loggingIn = location == '/login' || location == '/registro';
+      //final isLoggedIn = authController.isLoggedIn;
+      //final location = state.uri.path;
 
-      if (!loggedIn && !loggingIn) return '/login';
-      if (loggedIn && loggingIn) return '/home';
-      return null; // no hacer nada
+      //const protected = ['/home', '/favoritos', '/agregar', '/listas'];
+
+      // Si no está logueado y quiere entrar a zonas protegidas → /login
+     // if (!isLoggedIn && protected.contains(location)) {
+     //   return '/login';
+     // }
+
+      // Si ya está logueado y está en /login o /registro → /home
+      //   if (isLoggedIn && (location == '/login' || location == '/registro')) {
+     //   return '/home';
+    //  }
+
+      return null;
     },
     routes: [
-      // Rutas públicas (login y registro)
+      GoRoute(path: '/inicio', builder: (context, state) => const InicioApp()),
       GoRoute(path: '/login', builder: (context, state) => const LoginView()),
       GoRoute(path: '/registro', builder: (context, state) => const RegistroView()),
-
-      // Rutas privadas (pantallas con barra inferior)
       GoRoute(path: '/home', builder: (context, state) => const HomeView()),
       GoRoute(path: '/favoritos', builder: (context, state) => const FavoritosView()),
       GoRoute(path: '/agregar', builder: (context, state) => const AgregarView()),

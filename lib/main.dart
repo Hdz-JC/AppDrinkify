@@ -15,12 +15,12 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => AuthController(),
       child: Consumer<AuthController>(
-        builder: (context, authController, _) {
-          final router = createRouter(authController);
+        builder: (context, auth, _) {
+          final router = createRouter(auth); // se usará initialLocation: '/inicio'
 
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            title: 'App Drinkify',
+            title: 'Drinkify',
             theme: ThemeData(
               useMaterial3: true,
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
