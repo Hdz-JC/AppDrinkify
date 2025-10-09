@@ -1,7 +1,7 @@
+import 'package:appdrinkify/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:appdrinkify/controllers/auth_controller.dart';
-import 'package:provider/provider.dart';
+//import 'package:appdrinkify/controllers/auth_controller.dart';
+//import 'package:provider/provider.dart';
 
 
 class LoginView extends StatelessWidget {
@@ -12,7 +12,7 @@ class LoginView extends StatelessWidget {
     // Controladores para los campos de texto (opcional, por ahora sin lógica)
     final TextEditingController usernameController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    final auth = Provider.of<AuthController>(context, listen: false);
+    //final auth = Provider.of<AuthController>(context, listen: false);
 
 
     return Scaffold(
@@ -62,7 +62,7 @@ class LoginView extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // Aquí luego conectaremos la lógica de autenticación
-                  context.go('/home');
+                 NavigationController.navigateTo(context,'/home');
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
@@ -78,7 +78,7 @@ class LoginView extends StatelessWidget {
               // Botón para regresar
               TextButton(
                 onPressed: () {
-                  context.go('/inicio');// Regresa a InicioApp
+                  NavigationController.navigateTo(context,'/inicio');// Regresa a InicioApp
                 },
                 child: const Text(
                   'Regresar',

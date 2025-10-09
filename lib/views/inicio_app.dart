@@ -1,5 +1,5 @@
+import 'package:appdrinkify/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class InicioApp extends StatelessWidget {
   const InicioApp({super.key});
@@ -22,7 +22,6 @@ class InicioApp extends StatelessWidget {
 
             const SizedBox(height: 40),
 
-            // Ícono principal de usuario/inicio de sesión
             const Icon(
               Icons.person_rounded,
               size: 150,
@@ -30,11 +29,9 @@ class InicioApp extends StatelessWidget {
 
             const SizedBox(height: 50),
 
-            // Botón de iniciar sesión
             ElevatedButton(
               onPressed: () {
-                // Aquí luego agregaremos la navegación al Login
-                context.go('/login');
+                NavigationController.navigateTo(context, '/login');
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
@@ -47,11 +44,9 @@ class InicioApp extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // Botón de registrarse
             ElevatedButton(
               onPressed: () {
-                // Aquí luego agregaremos la navegación al Registro
-                context.go('/registro');
+                NavigationController.navigateTo(context, '/registro');
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),

@@ -1,3 +1,4 @@
+import 'package:appdrinkify/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,16 +22,16 @@ class BottomNavBar extends StatelessWidget {
       onTap: (index) {
         switch (index) {
           case 0:
-            context.go('/home');
+            NavigationController.navigateTo(context,'/home');
             break;
           case 1:
-            context.go('/favoritos');
+           NavigationController.navigateTo(context,'/favoritos');
             break;
           case 2:
-            context.go('/agregar');
+            NavigationController.navigateTo(context,'/agregar');
             break;
           case 3:
-            context.go('/listas');
+            NavigationController.navigateTo(context,'/listas');
             break;
         }
       },

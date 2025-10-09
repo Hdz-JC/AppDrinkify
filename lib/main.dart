@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'controllers/auth_controller.dart';
 import 'app_router.dart';
 
 void main() {
@@ -12,23 +10,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AuthController(),
-      child: Consumer<AuthController>(
-        builder: (context, auth, _) {
-          final router = createRouter(auth); // se usará initialLocation: '/inicio'
+    final router = createRouter(); 
 
-          return MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            title: 'Drinkify',
-            theme: ThemeData(
-              useMaterial3: true,
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            ),
-            routerConfig: router,
-          );
-        },
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      title: 'Drinkify',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
+      routerConfig: router,
     );
   }
 }
+
+//import 'package:provider/provider.dart';
+//import 'controllers/auth_controller.dart';

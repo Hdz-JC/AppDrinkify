@@ -1,7 +1,7 @@
+import 'package:appdrinkify/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:appdrinkify/controllers/auth_controller.dart';
+//import 'package:provider/provider.dart';
+//import 'package:appdrinkify/controllers/auth_controller.dart';
 
 class RegistroView extends StatelessWidget {
   const RegistroView({super.key});
@@ -13,7 +13,7 @@ class RegistroView extends StatelessWidget {
     final TextEditingController usernameController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
-    final auth = Provider.of<AuthController>(context, listen: false);
+    //final auth = Provider.of<AuthController>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +74,7 @@ class RegistroView extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // Simula registro: cambia estado a logueado
-                  auth.login(); // Esto activa el authController
+                  //auth.login(); // Esto activa el authController
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Usuario registrado con éxito!')),
                   );
@@ -93,7 +93,7 @@ class RegistroView extends StatelessWidget {
               // Botón Regresar
               TextButton(
                 onPressed: () {
-                  context.go('/inicio'); // Regresa a InicioApp
+                  NavigationController.navigateTo(context,'/inicio'); // Regresa a InicioApp
                 },
                 child: const Text(
                   'Regresar',
