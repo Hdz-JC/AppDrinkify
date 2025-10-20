@@ -22,26 +22,4 @@ GoRouter createRouter() {
   );
 }
 
-//import 'controllers/auth_controller.dart';
- /*
-    initialLocation: '/inicio',
-    refreshListenable: authController, // escucha cambios en auth
-    redirect: (context, state) {
-      final isLoggedIn = authController.isLoggedIn;
-      final location = state.uri.path;
 
-      const protected = ['/home', '/favoritos', '/agregar', '/listas'];
-
-       Si no está logueado y quiere entrar a zonas protegidas → /login
-     if (!isLoggedIn && protected.contains(location)) {
-     return '/login';
-     }
-
-      Si ya está logueado y está en /login o /registro → /home
-       if (isLoggedIn && (location == '/login' || location == '/registro')) {
-     return '/home';
-    }
-
-      return null;
-    },
-    */

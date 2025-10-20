@@ -1,19 +1,66 @@
-import 'package:appdrinkify/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
-//import 'package:appdrinkify/controllers/auth_controller.dart';
-//import 'package:provider/provider.dart';
-
+import '../controllers/navigation_controller.dart';
+import '../models/user_model.dart';
+import '../services/sqlite_service.dart';
+import '../services/supabase_service.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Controladores para los campos de texto (opcional, por ahora sin lógica)
-    final TextEditingController usernameController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-    //final auth = Provider.of<AuthController>(context, listen: false);
 
+    final SupabaseService supabaseService = SupabaseService();
+
+    Future<void> _login() async {
+      final email = emailController.text.trim();
+      final password = passwordController.text;
+
+      if (email.isEmpty || password.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Todos los campos son obligatorios')),
+        );
+        return;
+      }
+
+      UserModel? user;
+
+      try {
+        // 1️⃣ Intentar login desde SQLite (offline)
+        user = await SQLiteService.getUserByEmail(email);
+
+        if (user != null && user.password != password) {
+          user = null; // Contraseña incorrecta, seguir con Supabase
+        }
+
+        // 2️⃣ Si no existe en SQLite o contraseña incorrecta, intentar Supabase
+        if (user == null) {
+          user = await supabaseService.loginUser(email, password);
+
+          // Si se encontró en Supabase, guardamos localmente
+          if (user != null) {
+            await SQLiteService.insertUser(user);
+          }
+        }
+
+        if (user != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Login exitoso!')),
+          );
+          NavigationController.navigateTo(context, '/home');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Email o contraseña incorrectos')),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error en login: $e')),
+        );
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -21,31 +68,26 @@ class LoginView extends StatelessWidget {
         centerTitle: true,
       ),
       body: Center(
-        child: SingleChildScrollView( // Para evitar overflow con el teclado
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.person_rounded,
-                size: 120,
-              ),
-
+              const Icon(Icons.person_rounded, size: 120),
               const SizedBox(height: 30),
 
-              // Campo de nombre de usuario
+              // Campo Email
               TextField(
-                controller: usernameController,
+                controller: emailController,
                 decoration: const InputDecoration(
-                  labelText: 'Usuario',
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person_outline),
+                  prefixIcon: Icon(Icons.email_outlined),
                 ),
               ),
-
               const SizedBox(height: 20),
 
-              // Campo de contraseña
+              // Campo Contraseña
               TextField(
                 controller: passwordController,
                 obscureText: true,
@@ -55,35 +97,22 @@ class LoginView extends StatelessWidget {
                   prefixIcon: Icon(Icons.lock_outline),
                 ),
               ),
-
               const SizedBox(height: 40),
 
-              // Botón de iniciar sesión
+              // Botón Entrar
               ElevatedButton(
-                onPressed: () {
-                  // Aquí luego conectaremos la lógica de autenticación
-                 NavigationController.navigateTo(context,'/home');
-                },
+                onPressed: _login,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 ),
-                child: const Text(
-                  'Entrar',
-                  style: TextStyle(fontSize: 18),
-                ),
+                child: const Text('Entrar', style: TextStyle(fontSize: 18)),
               ),
-
               const SizedBox(height: 20),
 
-              // Botón para regresar
+              // Botón Regresar
               TextButton(
-                onPressed: () {
-                  NavigationController.navigateTo(context,'/inicio');// Regresa a InicioApp
-                },
-                child: const Text(
-                  'Regresar',
-                  style: TextStyle(fontSize: 16),
-                ),
+                onPressed: () => NavigationController.navigateTo(context, '/inicio'),
+                child: const Text('Regresar', style: TextStyle(fontSize: 16)),
               ),
             ],
           ),

@@ -1,7 +1,9 @@
 import 'package:appdrinkify/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
-//import 'package:provider/provider.dart';
-//import 'package:appdrinkify/controllers/auth_controller.dart';
+import '../models/user_model.dart';
+import '../services/sqlite_service.dart';
+import '../services/supabase_service.dart';
+
 
 class RegistroView extends StatelessWidget {
   const RegistroView({super.key});
@@ -9,11 +11,56 @@ class RegistroView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Controladores de los campos
-    final TextEditingController nameController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
     final TextEditingController usernameController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
-    //final auth = Provider.of<AuthController>(context, listen: false);
+    final SupabaseService supabaseService = SupabaseService();
+
+    //Inicio
+     Future<void> _register() async {
+      final email = emailController.text.trim();
+      final username = usernameController.text.trim();
+      final password = passwordController.text;
+
+      if (email.isEmpty || username.isEmpty || password.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Todos los campos son obligatorios')),
+        );
+        return;
+      }
+
+      final user = UserModel(
+        email: email,
+        username: username,
+        password: password,
+      );
+
+      try {
+        // Guardar en SQLite (offline)
+        await SQLiteService.insertUser(user);
+
+        // Guardar en Supabase (online)
+        final success = await supabaseService.registerUser(user);
+
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Usuario registrado con éxito!')),
+          );
+          NavigationController.navigateTo(context, '/inicio');
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Error al registrar en Supabase')),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
+
+    //Fin
 
     return Scaffold(
       appBar: AppBar(
@@ -26,23 +73,18 @@ class RegistroView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
-                Icons.person_add_rounded,
-                size: 120,
-              ),
-
+              const Icon(Icons.person_add_rounded, size: 120),
               const SizedBox(height: 30),
 
-              // Campo Nombre
+              // Campo Email
               TextField(
-                controller: nameController,
+                controller: emailController,
                 decoration: const InputDecoration(
-                  labelText: 'Nombre',
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.badge_outlined),
+                  prefixIcon: Icon(Icons.email_outlined),
                 ),
               ),
-
               const SizedBox(height: 20),
 
               // Campo Usuario
@@ -54,7 +96,6 @@ class RegistroView extends StatelessWidget {
                   prefixIcon: Icon(Icons.person_outline),
                 ),
               ),
-
               const SizedBox(height: 20),
 
               // Campo Contraseña
@@ -67,38 +108,22 @@ class RegistroView extends StatelessWidget {
                   prefixIcon: Icon(Icons.lock_outline),
                 ),
               ),
-
               const SizedBox(height: 40),
 
               // Botón Registrar
               ElevatedButton(
-                onPressed: () {
-                  // Simula registro: cambia estado a logueado
-                  //auth.login(); // Esto activa el authController
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Usuario registrado con éxito!')),
-                  );
-                },
+                onPressed: _register,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 ),
-                child: const Text(
-                  'Registrar',
-                  style: TextStyle(fontSize: 18),
-                ),
+                child: const Text('Registrar', style: TextStyle(fontSize: 18)),
               ),
-
               const SizedBox(height: 20),
 
               // Botón Regresar
               TextButton(
-                onPressed: () {
-                  NavigationController.navigateTo(context,'/inicio'); // Regresa a InicioApp
-                },
-                child: const Text(
-                  'Regresar',
-                  style: TextStyle(fontSize: 16),
-                ),
+                onPressed: () => NavigationController.navigateTo(context, '/inicio'),
+                child: const Text('Regresar', style: TextStyle(fontSize: 16)),
               ),
             ],
           ),
