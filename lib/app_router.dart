@@ -6,6 +6,8 @@ import 'views/home_view.dart';
 import 'views/favoritos_view.dart';
 import 'views/agregar_view.dart';
 import 'views/listas_view.dart';
+import 'views/categorias_view.dart';
+import 'views/recomendacion_view.dart';
 
 GoRouter createRouter() {
   return GoRouter(
@@ -18,6 +20,8 @@ GoRouter createRouter() {
       GoRoute(path: '/favoritos', builder: (context, state) => const FavoritosView()),
       GoRoute(path: '/agregar', builder: (context, state) => const AgregarView()),
       GoRoute(path: '/listas', builder: (context, state) => const ListasView()),
+      GoRoute(path: '/categorias', builder: (context, state) => const CategoriasView()),
+      GoRoute(path: '/recomendacion', builder: (context, state) => const RecomendacionView()),
     ],
   );
 }
