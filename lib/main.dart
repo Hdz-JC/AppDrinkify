@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app_router.dart';
+import 'controllers/auth_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -8,10 +10,16 @@ void main() async {
   // Inicializar Supabase
   await Supabase.initialize(
     url: 'https://tbgdjgohrllhrcmwigkv.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiZ2RqZ29ocmxsaHJjbXdpZ2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1Mzg4MjIsImV4cCI6MjA3NjExNDgyMn0.V6rI0L7fOw8fMB3dFT1S4dkn-nMj0v45tXk3nncoT8g',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiZ2RqZ29ocmxsaHJjbXdpZ2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1Mzg4MjIsImV4cCI6MjA3NjExNDgyMn0.V6rI0L7fOw8fMB3dFT1S4dkn-nMj0v45tXk3nncoT8g',
   );
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AuthController(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
