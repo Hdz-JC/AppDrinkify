@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:appdrinkify/controllers/navigation_controller.dart';
 import '../widgets/bottom_nav_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import '../providers/auth_provider.dart';
+import 'package:provider/provider.dart';
+
 
 class HomeView extends StatefulWidget {
   const HomeView({
@@ -24,18 +27,26 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
+
+    final username = context.watch<AuthProvider>().currentUser?.username ?? 'Usuario';
+
+
     return Scaffold(
       appBar: AppBar(
         //leading: Icon(Icons.person_rounded, size: 80),
-        title: const Text('Bienvenido usuario',
-        style: TextStyle(
+        title: Text('Bienvenido $username',
+        style: const TextStyle(
           fontSize: 25,
           fontWeight: FontWeight.bold,
         ),
         ),
         actions: [
           IconButton(
-            onPressed:()=> NavigationController.navigateTo(context,'/inicio'),
+            onPressed:(){
+                final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                authProvider.logout();
+                NavigationController.navigateTo(context, '/inicio');
+            },
             icon: const Icon(Icons.logout),
           ),
         ],

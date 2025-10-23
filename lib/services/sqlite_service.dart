@@ -38,4 +38,12 @@ class SQLiteService {
     }
     return null;
   }
+
+  static Future<void> deleteAllUsers() async {
+    // Implementa la lógica para borrar todos los usuarios de la DB
+    final db = await getDb(); // tu instancia de DB
+    await db.delete('users');
+  }
+
+  
 }

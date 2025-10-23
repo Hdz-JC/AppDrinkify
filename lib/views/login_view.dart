@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../controllers/navigation_controller.dart';
 import '../models/user_model.dart';
 import '../services/sqlite_service.dart';
-import '../services/supabase_service.dart';
+import '../providers/auth_provider.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -11,8 +12,6 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-
-    final SupabaseService supabaseService = SupabaseService();
 
     Future<void> _login() async {
       final email = emailController.text.trim();
@@ -25,21 +24,22 @@ class LoginView extends StatelessWidget {
         return;
       }
 
-      UserModel? user;
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
       try {
         // 1️⃣ Intentar login desde SQLite (offline)
-        user = await SQLiteService.getUserByEmail(email);
+        UserModel? user = await SQLiteService.getUserByEmail(email);
 
         if (user != null && user.password != password) {
-          user = null; // Contraseña incorrecta, seguir con Supabase
+          user = null; // Contraseña incorrecta, intentar con Supabase
         }
 
-        // 2️⃣ Si no existe en SQLite o contraseña incorrecta, intentar Supabase
+        // 2️⃣ Si no existe en SQLite o contraseña incorrecta, intentar Supabase vía AuthProvider
         if (user == null) {
-          user = await supabaseService.loginUser(email, password);
+          await authProvider.login(email, password);
+          user = authProvider.currentUser;
 
-          // Si se encontró en Supabase, guardamos localmente
+          // Guardamos localmente en SQLite si login exitoso
           if (user != null) {
             await SQLiteService.insertUser(user);
           }
