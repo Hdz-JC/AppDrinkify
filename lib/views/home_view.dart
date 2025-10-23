@@ -4,7 +4,9 @@ import '../widgets/bottom_nav_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  const HomeView({
+    super.key,
+    });
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -100,4 +102,5 @@ class _HomeViewState extends State<HomeView> {
       bottomNavigationBar: const BottomNavBar(),
     );
   }
+  
 }
