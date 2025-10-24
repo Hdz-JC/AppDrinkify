@@ -25,9 +25,25 @@ class SQLiteService {
     return _db!;
   }
 
-  static Future<void> insertUser(UserModel user) async {
+  /// Inserta un usuario solo si el email no existe
+  static Future<bool> insertUser(UserModel user) async {
     final db = await getDb();
-    await db.insert('users', user.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+
+    // 1️⃣ Revisar si el email ya existe
+    final existing = await getUserByEmail(user.email);
+    if (existing != null) {
+      print('El email ya existe en SQLite');
+      return false; // no insertamos duplicado
+    }
+
+    // 2️⃣ Insertar usuario
+    await db.insert(
+      'users',
+      user.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.abort,
+    );
+
+    return true;
   }
 
   static Future<UserModel?> getUserByEmail(String email) async {
@@ -40,10 +56,7 @@ class SQLiteService {
   }
 
   static Future<void> deleteAllUsers() async {
-    // Implementa la lógica para borrar todos los usuarios de la DB
-    final db = await getDb(); // tu instancia de DB
+    final db = await getDb();
     await db.delete('users');
   }
-
-  
 }

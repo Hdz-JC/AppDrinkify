@@ -8,6 +8,8 @@ import '../services/supabase_service.dart';
 class RegistroView extends StatelessWidget {
   const RegistroView({super.key});
 
+  
+
   @override
   Widget build(BuildContext context) {
     // Controladores de los campos
@@ -16,6 +18,12 @@ class RegistroView extends StatelessWidget {
     final TextEditingController passwordController = TextEditingController();
 
     final SupabaseService supabaseService = SupabaseService();
+
+    void _clearFields() {
+        emailController.clear();
+        usernameController.clear();
+        passwordController.clear();
+      }
 
     //Inicio
      Future<void> _register() async {
@@ -47,17 +55,30 @@ class RegistroView extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Usuario registrado con éxito!')),
           );
+           _clearFields();
           NavigationController.navigateTo(context, '/inicio');
-        } else {
+        } 
+        
+        else if(!success){
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Este email ya está registrado')),
+          );
+          _clearFields();
+        }
+
+        else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Error al registrar en Supabase')),
           );
+          _clearFields();
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $e')),
         );
+        _clearFields();
       }
+
     }
 
     //Fin

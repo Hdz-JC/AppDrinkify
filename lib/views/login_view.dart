@@ -13,6 +13,11 @@ class LoginView extends StatelessWidget {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
+    void _clearFields() {
+      emailController.clear();
+      passwordController.clear();
+    }
+
     Future<void> _login() async {
       final email = emailController.text.trim();
       final password = passwordController.text;
@@ -49,16 +54,19 @@ class LoginView extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login exitoso!')),
           );
+          _clearFields();
           NavigationController.navigateTo(context, '/home');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Email o contraseña incorrectos')),
           );
+          _clearFields();
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error en login: $e')),
         );
+        _clearFields();
       }
     }
 

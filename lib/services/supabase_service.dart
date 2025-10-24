@@ -7,6 +7,19 @@ class SupabaseService {
   /// Registra un usuario en Supabase
   Future<bool> registerUser(UserModel user) async {
     try {
+
+      // 1️⃣ Revisar si el email ya existe
+      final existing = await client
+          .from('users')
+          .select()
+          .eq('email', user.email)
+          .maybeSingle(); // devuelve null si no existe
+
+      if (existing != null) {
+        print('El email ya está registrado');
+        return false; // No permitimos registro duplicado
+      }
+
       final response = await client
           .from('users')
           .insert({
@@ -14,19 +27,19 @@ class SupabaseService {
             'username': user.username,
             'password': user.password,
           })
-          .select(); // No usamos execute() en 2.x
+          .select(); 
 
-      // Revisamos si hay error manualmente
-      if (response == null || (response as List).isEmpty) {
-        print('Error al registrar en Supabase');
+        // Revisamos si hay error manualmente
+        if (response == null || (response as List).isEmpty) {
+          print('Error al registrar en Supabase');
+          return false;
+        }
+
+        print('Usuario registrado en Supabase: $response');
+        return true;
+      }   catch (e) {
+        print('Excepción al registrar usuario: $e');
         return false;
-      }
-
-      print('Usuario registrado en Supabase: $response');
-      return true;
-    } catch (e) {
-      print('Excepción al registrar usuario: $e');
-      return false;
     }
   }
 
