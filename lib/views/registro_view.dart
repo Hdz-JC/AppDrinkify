@@ -1,14 +1,12 @@
 import 'package:appdrinkify/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
-import '../services/sqlite_service.dart';
-import '../services/supabase_service.dart';
+import '../config/datasource/sqlite_service.dart';
+import '../config/datasource/supabase_service.dart';
 
 
 class RegistroView extends StatelessWidget {
   const RegistroView({super.key});
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +17,14 @@ class RegistroView extends StatelessWidget {
 
     final SupabaseService supabaseService = SupabaseService();
 
-    void _clearFields() {
+    void clearFields() {
         emailController.clear();
         usernameController.clear();
         passwordController.clear();
       }
 
     //Inicio
-     Future<void> _register() async {
+     Future<void> register() async {
       final email = emailController.text.trim();
       final username = usernameController.text.trim();
       final password = passwordController.text;
@@ -55,7 +53,7 @@ class RegistroView extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Usuario registrado con éxito!')),
           );
-           _clearFields();
+           clearFields();
           NavigationController.navigateTo(context, '/inicio');
         } 
         
@@ -63,20 +61,20 @@ class RegistroView extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Este email ya está registrado')),
           );
-          _clearFields();
+          clearFields();
         }
 
         else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Error al registrar en Supabase')),
           );
-          _clearFields();
+          clearFields();
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $e')),
         );
-        _clearFields();
+        clearFields();
       }
 
     }
@@ -133,7 +131,7 @@ class RegistroView extends StatelessWidget {
 
               // Botón Registrar
               ElevatedButton(
-                onPressed: _register,
+                onPressed: register,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 ),

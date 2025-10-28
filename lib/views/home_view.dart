@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:appdrinkify/controllers/navigation_controller.dart';
-import '../widgets/bottom_nav_bar.dart';
+import 'widgets/bottom_nav_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../providers/auth_provider.dart';
 import 'package:provider/provider.dart';

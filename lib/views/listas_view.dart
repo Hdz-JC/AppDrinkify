@@ -1,4 +1,4 @@
-import 'package:appdrinkify/widgets/bottom_nav_bar.dart';
+import 'package:appdrinkify/views/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 class ListasView extends StatelessWidget {

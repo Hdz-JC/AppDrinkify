@@ -1,5 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../models/user_model.dart';
+import '../../models/user_model.dart';
 
 class SupabaseService {
   final SupabaseClient client = Supabase.instance.client;
@@ -53,13 +53,14 @@ class SupabaseService {
           .eq('password', password)
           .maybeSingle(); // No usamos execute()
 
-      // Revisamos si no hay datos
-      if (response == null) {
-        print('Usuario no encontrado o contraseña incorrecta');
-        return null;
+      // Revisamos si hay datos
+      if (response != null) {
+       return UserModel.fromMap(response);
       }
 
-      return UserModel.fromMap(response as Map<String, dynamic>);
+      print('Usuario no encontrado o contraseña incorrecta');
+      return null;
+
     } catch (e) {
       print('Excepción al loguear usuario: $e');
       return null;

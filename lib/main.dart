@@ -3,14 +3,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:appdrinkify/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'app_router.dart';
+import 'config/env.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+   
   // Inicializar Supabase
   await Supabase.initialize(
-    url: 'https://tbgdjgohrllhrcmwigkv.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiZ2RqZ29ocmxsaHJjbXdpZ2t2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1Mzg4MjIsImV4cCI6MjA3NjExNDgyMn0.V6rI0L7fOw8fMB3dFT1S4dkn-nMj0v45tXk3nncoT8g',
+    url: Env.supabaseUrl,
+    anonKey: Env.supabaseAnonKey,
   );
 
   runApp(

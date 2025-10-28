@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/navigation_controller.dart';
 import '../models/user_model.dart';
-import '../services/sqlite_service.dart';
+import '../config/datasource/sqlite_service.dart';
 import '../providers/auth_provider.dart';
 
 class LoginView extends StatelessWidget {

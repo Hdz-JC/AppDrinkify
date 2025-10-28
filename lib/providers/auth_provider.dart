@@ -1,7 +1,7 @@
-import 'package:appdrinkify/services/sqlite_service.dart';
+import 'package:appdrinkify/config/datasource/sqlite_service.dart';
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
-import '../services/supabase_service.dart';
+import '../config/datasource/supabase_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final SupabaseService _supabaseService = SupabaseService();
