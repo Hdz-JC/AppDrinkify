@@ -1,62 +1,73 @@
+// lib/config/datasource/sqlite_service.dart
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import '../../models/user_model.dart';
+import 'package:appdrinkify/models/bebidas_model.dart'; // Importa tu nuevo modelo
 
-class SQLiteService {
-  static Database? _db;
+class SqliteService {
+  // --- Singleton Pattern (opcional pero recomendado) ---
+  static final SqliteService instance = SqliteService._init();
+  static Database? _database;
+  SqliteService._init();
+  // --- Fin Singleton ---
 
-  static Future<Database> getDb() async {
-    if (_db != null) return _db!;
-    String path = join(await getDatabasesPath(), 'app.db');
-    _db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE users(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT UNIQUE,
-            username TEXT,
-            password TEXT
-          )
-        ''');
-      },
-    );
-    return _db!;
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    _database = await _initDB('bebidas.db');
+    return _database!;
   }
 
-  /// Inserta un usuario solo si el email no existe
-  static Future<bool> insertUser(UserModel user) async {
-    final db = await getDb();
+  Future<Database> _initDB(String filePath) async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, filePath);
+    return await openDatabase(path, version: 1, onCreate: _createDB);
+  }
 
-    // 1️⃣ Revisar si el email ya existe
-    final existing = await getUserByEmail(user.email);
-    if (existing != null) {
-      print('El email ya existe en SQLite');
-      return false; // no insertamos duplicado
+  // Crear la tabla de bebidas
+  Future _createDB(Database db, int version) async {
+    await db.execute('''
+    CREATE TABLE bebidas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT NOT NULL,
+      descripcion TEXT,
+      preparacion TEXT,
+      image_url TEXT NOT NULL 
+    )
+    ''');
+  }
+
+  // --- Métodos CRUD para Bebidas ---
+
+  // Insertar una bebida
+  Future<int> createBebida(Bebida bebida) async {
+    final db = await instance.database;
+    return await db.insert('bebidas', bebida.toMap());
+  }
+
+  // Obtener todas las bebidas
+  Future<List<Bebida>> getAllBebidas() async {
+    final db = await instance.database;
+    final result = await db.query('bebidas', orderBy: 'nombre ASC');
+    return result.map((json) => Bebida.fromMap(json)).toList();
+  }
+  
+  // Puedes añadir un método para poblar datos iniciales si la tabla está vacía
+  Future<void> popularDatosIniciales() async {
+    final db = await instance.database;
+    final count = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM bebidas'));
+    
+    if (count == 0) {
+      await createBebida(Bebida(
+        nombre: "Mojito",
+        descripcion: "Un cóctel cubano refrescante.",
+        preparacion: "Menta, azúcar, ron, lima y soda.",
+        imageUrl: "assets/images/bebidas/mojito.jpeg" // Ruta de ejemplo
+      ));
+      await createBebida(Bebida(
+        nombre: "Margarita",
+        descripcion: "Clásico cóctel mexicano.",
+        preparacion: "Tequila, triple sec y jugo de lima.",
+        imageUrl: "assets/images/bebidas/pina_colada.jpeg" // Ruta de ejemplo
+      ));
     }
-
-    // 2️⃣ Insertar usuario
-    await db.insert(
-      'users',
-      user.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.abort,
-    );
-
-    return true;
-  }
-
-  static Future<UserModel?> getUserByEmail(String email) async {
-    final db = await getDb();
-    final maps = await db.query('users', where: 'email = ?', whereArgs: [email]);
-    if (maps.isNotEmpty) {
-      return UserModel.fromMap(maps.first);
-    }
-    return null;
-  }
-
-  static Future<void> deleteAllUsers() async {
-    final db = await getDb();
-    await db.delete('users');
   }
 }

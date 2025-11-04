@@ -36,10 +36,7 @@ class AuthProvider extends ChangeNotifier {
   // Limpiamos el usuario en memoria
   _currentUser = null;
 
-  // Opcional: limpiar SQLite
-  await SQLiteService.deleteAllUsers();
 
-  notifyListeners();
 }
 
 }

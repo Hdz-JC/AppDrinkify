@@ -32,23 +32,9 @@ class LoginView extends StatelessWidget {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
       try {
-        // 1️⃣ Intentar login desde SQLite (offline)
-        UserModel? user = await SQLiteService.getUserByEmail(email);
-
-        if (user != null && user.password != password) {
-          user = null; // Contraseña incorrecta, intentar con Supabase
-        }
-
-        // 2️⃣ Si no existe en SQLite o contraseña incorrecta, intentar Supabase vía AuthProvider
-        if (user == null) {
-          await authProvider.login(email, password);
-          user = authProvider.currentUser;
-
-          // Guardamos localmente en SQLite si login exitoso
-          if (user != null) {
-            await SQLiteService.insertUser(user);
-          }
-        }
+        
+        await authProvider.login(email, password);
+        UserModel ? user = authProvider.currentUser;
 
         if (user != null) {
           ScaffoldMessenger.of(context).showSnackBar(

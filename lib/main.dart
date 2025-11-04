@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:appdrinkify/providers/auth_provider.dart';
+import 'package:appdrinkify/providers/bebidas_provider.dart';
 import 'package:provider/provider.dart';
 import 'app_router.dart';
 import 'config/env.dart';
@@ -15,10 +16,13 @@ void main() async {
   );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => AuthProvider(),
-      child: const MyApp(),
-    )
+    MultiProvider(
+  providers: [
+    ChangeNotifierProvider(create: (_) => AuthProvider()),
+    ChangeNotifierProvider(create: (_) => BebidaProvider()), // <-- AÑADIR ESTE
+  ],
+  child: const MyApp(),
+    ),
   );
 }
 

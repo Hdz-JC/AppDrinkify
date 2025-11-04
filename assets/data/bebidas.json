@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "nombre": "Mojito",
+    "categoria": "Cocteles",
+    "descripcion": "Refrescante bebida con hierbabuena y limón",
+    "imagen": "assets/images/bebidas/mojito.jpeg"
+  },
+  {
+    "id": 2,
+    "nombre": "Piña Colada",
+    "categoria": "Cocteles",
+    "descripcion": "Dulce mezcla de piña y coco",
+    "imagen": "assets/images/bebidas/pina_colada.jpeg"
+  }
+]

@@ -43,9 +43,7 @@ class RegistroView extends StatelessWidget {
       );
 
       try {
-        // Guardar en SQLite (offline)
-        await SQLiteService.insertUser(user);
-
+        
         // Guardar en Supabase (online)
         final success = await supabaseService.registerUser(user);
 
