@@ -13,7 +13,6 @@ class BebidaProvider extends ChangeNotifier {
   List<Bebida> get listaCompletaBebidas => _listaCompletaBebidas;
 
   BebidaProvider() {
-    // Carga los datos iniciales y luego carga la lista
     _inicializar();
   }
 
@@ -21,29 +20,36 @@ class BebidaProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     
-    // 1. Asegúrate de que haya datos (ejecuta esto solo una vez)
+    // 1. Poblar BD (si es necesario) con categorías y bebidas
     await _sqliteService.popularDatosIniciales();
     
-    // 2. Carga todas las bebidas en memoria
+    // 2. Cargar todas las bebidas (esto ahora incluye el JOIN!)
     _listaCompletaBebidas = await _sqliteService.getAllBebidas();
     
     _isLoading = false;
     notifyListeners();
   }
 
-  // ¡La lógica de búsqueda!
+  // --- MODIFICADO: Búsqueda más potente ---
   List<Bebida> buscarBebidas(String query) {
     if (query.isEmpty) {
-      return []; // No mostrar nada si la búsqueda está vacía
+      return [];
     }
     
     final queryMinusculas = query.toLowerCase();
 
-    // Filtra la lista que ya tienes en memoria (¡súper rápido!)
     final resultados = _listaCompletaBebidas.where((bebida) {
       final nombreMinusculas = bebida.nombre.toLowerCase();
-      // Puedes hacer la búsqueda más compleja (por ingrediente, etc.)
-      return nombreMinusculas.contains(queryMinusculas);
+      final descripcionMinusculas = bebida.descripcion.toLowerCase();
+      
+      // 'categoria_nombre' viene del JOIN y es seguro usarlo
+      final categoriaMinusculas = bebida.categoria_nombre?.toLowerCase() ?? '';
+
+      // Buscar en NOMBRE, DESCRIPCIÓN y NOMBRE DE CATEGORÍA
+      return nombreMinusculas.contains(queryMinusculas) || 
+             descripcionMinusculas.contains(queryMinusculas) ||
+             categoriaMinusculas.contains(queryMinusculas);
+             
     }).toList();
 
     return resultados;

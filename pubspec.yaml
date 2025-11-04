@@ -25,4 +25,10 @@ flutter:
   uses-material-design: true
 
   assets:
-  - assets/images/bebidas/
+    # Registra CADA carpeta de categoría
+    - assets/images/aguas_frescas/
+    - assets/images/calientes/
+    - assets/images/con_alcohol/
+    - assets/images/jugos_clasicos/
+    - assets/images/jugos_fitness/
+    - assets/images/batidos/
