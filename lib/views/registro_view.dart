@@ -24,17 +24,56 @@ class RegistroView extends StatelessWidget {
       }
 
     //Inicio
-     Future<void> register() async {
+    Future<void> register() async {
       final email = emailController.text.trim();
       final username = usernameController.text.trim();
       final password = passwordController.text;
 
-      if (email.isEmpty || username.isEmpty || password.isEmpty) {
+      // --- VALIDACIONES CON REGEX AÑADIDAS ---
+
+      // 1. Validar Email
+      // Permite letras, números, y ._%+- antes del @
+      // Permite letras, números, y .- después del @
+      // Exige un dominio de 2+ letras (ej. .com)
+      final emailRegex =
+          RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+      if (!emailRegex.hasMatch(email)) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Todos los campos son obligatorios')),
+          const SnackBar(content: Text('Por favor, ingresa un correo válido')),
         );
-        return;
+        return; // Detiene la función
       }
+
+      // 2. Validar Usuario
+      // Debe empezar con letra
+      // Puede contener letras, números, _ o -
+      // Longitud total entre 3 y 20 caracteres
+      final userRegex = RegExp(r'^[a-zA-Z][a-zA-Z0-9_-]{2,19}$');
+      if (!userRegex.hasMatch(username)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content:
+                  Text('Usuario inválido (3-20 caracteres, debe empezar con letra)')),
+        );
+        return; // Detiene la función
+      }
+
+      // 3. Validar Contraseña
+      // Acepta cualquier carácter
+      // Longitud mínima de 8 caracteres
+      final passRegex = RegExp(r'^.{8,}$');
+      if (!passRegex.hasMatch(password)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('La contraseña debe tener al menos 8 caracteres')),
+        );
+        return; // Detiene la función
+      }
+
+      // --- FIN DE VALIDACIONES ---
+
+      // Tu 'if (email.isEmpty...)' anterior ya no es necesario
+      // porque los regex cubren el caso de que estén vacíos.
 
       final user = UserModel(
         email: email,
@@ -43,7 +82,9 @@ class RegistroView extends StatelessWidget {
       );
 
       try {
-        
+        // Guardar en SQLite (offline)
+        //await SQLiteService.insertUser(user);
+
         // Guardar en Supabase (online)
         final success = await supabaseService.registerUser(user);
 
@@ -51,18 +92,14 @@ class RegistroView extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Usuario registrado con éxito!')),
           );
-           clearFields();
+          clearFields();
           NavigationController.navigateTo(context, '/inicio');
-        } 
-        
-        else if(!success){
+        } else if (!success) {
           ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Este email ya está registrado')),
+            const SnackBar(content: Text('Este email ya está registrado')),
           );
           clearFields();
-        }
-
-        else {
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Error al registrar en Supabase')),
           );
@@ -74,10 +111,7 @@ class RegistroView extends StatelessWidget {
         );
         clearFields();
       }
-
     }
-
-    //Fin
 
     return Scaffold(
       appBar: AppBar(

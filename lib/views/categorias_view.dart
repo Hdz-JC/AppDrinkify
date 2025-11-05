@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:appdrinkify/controllers/navigation_controller.dart';
-// --- AÑADIR IMPORTS ---
 import 'package:provider/provider.dart';
 import 'package:appdrinkify/providers/bebidas_provider.dart';
 import 'package:appdrinkify/views/bebidas_por_categoria_view.dart';
 import 'package:appdrinkify/models/bebidas_model.dart';
-// --- FIN IMPORTS ---
 
 class CategoriasView extends StatelessWidget{
   const CategoriasView({super.key});
@@ -45,12 +43,13 @@ class CategoriasView extends StatelessWidget{
       body: Center(
         child: SingleChildScrollView( // <-- Añadido para evitar overflow
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               //Row(
                 //mainAxisAlignment: MainAxisAlignment.spaceAround,
                 //children: [
                   Column(
+                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       TextButton(
                         // --- MODIFICADO ---

@@ -257,7 +257,7 @@ class SqliteService {
       imageUrl: "assets/images/jugos_clasicos/betabel.jpg",
       categoria_id: 4
     ));
-    /*
+    
     // ===============================
     // CATEGORÍA 5 - JUGOS FITNESS
     // ===============================
@@ -265,35 +265,35 @@ class SqliteService {
       nombre: "Jugo Verde Detox",
       descripcion: "Depurativo con vegetales verdes.",
       preparacion: "Licúa espinaca, pepino, apio, manzana verde, jengibre y limón.",
-      imageUrl: "assets/images/jugos_fitness/jugo_verde_detox.jpeg",
+      imageUrl: "assets/images/jugos_fitness/jugo_verde_detox.jpg",
       categoria_id: 5
     ));
     await createBebida(Bebida(
       nombre: "Energía Matutina",
       descripcion: "Activa el cuerpo y la mente.",
       preparacion: "Licúa zanahoria, naranja y jengibre fresco.",
-      imageUrl: "assets/images/jugos_fitness/energia_matutina.jpeg",
+      imageUrl: "assets/images/jugos_fitness/energia_matutina.jpg",
       categoria_id: 5
     ));
     await createBebida(Bebida(
       nombre: "Metabolismo Activo",
       descripcion: "Estimula la quema de grasa.",
       preparacion: "Mezcla toronja, piña y menta con agua fría.",
-      imageUrl: "assets/images/jugos_fitness/metabolismo_activo.jpeg",
+      imageUrl: "assets/images/jugos_fitness/metabolismo_activo.jpg",
       categoria_id: 5
     ));
     await createBebida(Bebida(
       nombre: "Recuperación Post-Ejercicio",
       descripcion: "Hidratante y rica en electrolitos.",
       preparacion: "Licúa sandía, limón y agua de coco.",
-      imageUrl: "assets/images/jugos_fitness/recuperacion_post.jpeg",
+      imageUrl: "assets/images/jugos_fitness/recuperacion_post_ejercicio.jpg",
       categoria_id: 5
     ));
     await createBebida(Bebida(
       nombre: "Antioxidante Power",
       descripcion: "Rico en antioxidantes naturales.",
       preparacion: "Licúa arándanos, uva y betabel con agua fría.",
-      imageUrl: "assets/images/jugos_fitness/antioxidante_power.jpeg",
+      imageUrl: "assets/images/jugos_fitness/antioxidante_power.jpg",
       categoria_id: 5
     ));
 
@@ -304,38 +304,38 @@ class SqliteService {
       nombre: "Banana y Avena",
       descripcion: "Ideal para el desayuno o post entreno.",
       preparacion: "Licúa plátano, avena, leche y miel.",
-      imageUrl: "assets/images/batidos/banana_avena.jpeg",
+      imageUrl: "assets/images/batidos/banana_avena.jpg",
       categoria_id: 6
     ));
     await createBebida(Bebida(
       nombre: "Fresa y Yogur",
       descripcion: "Cremoso, dulce y natural.",
       preparacion: "Licúa fresas, yogur natural y un toque de miel.",
-      imageUrl: "assets/images/batidos/fresa_yogur.jpeg",
+      imageUrl: "assets/images/batidos/fresa_yogur.jpg",
       categoria_id: 6
     ));
     await createBebida(Bebida(
       nombre: "Mango Tropical",
       descripcion: "Exótico y refrescante.",
       preparacion: "Licúa mango, piña y leche de coco.",
-      imageUrl: "assets/images/batidos/mango_tropical.jpeg",
+      imageUrl: "assets/images/batidos/mango_tropical.jpg",
       categoria_id: 6
     ));
     await createBebida(Bebida(
       nombre: "Chocolate Proteico",
       descripcion: "Energético y con alto contenido proteico.",
       preparacion: "Licúa cacao, plátano, proteína en polvo y mantequilla de maní.",
-      imageUrl: "assets/images/batidos/chocolate_proteico.jpeg",
+      imageUrl: "assets/images/batidos/chocolate_proteico.jpg",
       categoria_id: 6
     ));
     await createBebida(Bebida(
       nombre: "Verde Energético",
       descripcion: "Refrescante y rico en fibra.",
       preparacion: "Licúa espinaca, manzana, pepino, piña y agua de coco.",
-      imageUrl: "assets/images/batidos/verde_energetico.jpeg",
+      imageUrl: "assets/images/batidos/verde_energetico.jpg",
       categoria_id: 6
     ));
-    */
+    
   }
 }
 

@@ -7,8 +7,6 @@ class SupabaseService {
   /// Registra un usuario en Supabase
   Future<bool> registerUser(UserModel user) async {
     try {
-
-      // 1️⃣ Revisar si el email ya existe
       final existing = await client
           .from('users')
           .select()
