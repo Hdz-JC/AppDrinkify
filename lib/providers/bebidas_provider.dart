@@ -54,4 +54,18 @@ class BebidaProvider extends ChangeNotifier {
 
     return resultados;
   }
+
+  List<Bebida> getBebidasPorCategoria(String nombreCategoria) {
+    // Convierte el nombre de la categoría a minúsculas para una comparación segura
+    final nombreMinusculas = nombreCategoria.toLowerCase();
+    
+    // Filtra la lista completa de bebidas
+    final resultados = _listaCompletaBebidas.where((bebida) {
+      // Compara el nombre de categoría de la bebida (del JOIN)
+      final catNombreBebida = bebida.categoria_nombre?.toLowerCase() ?? '';
+      return catNombreBebida == nombreMinusculas;
+    }).toList();
+
+    return resultados;
+  }
 }
