@@ -22,12 +22,12 @@ class HomeView extends StatefulWidget {
 }
 
   final List<String> imgCarru = [
-    "https://lucavending.net/wp-content/uploads/2021/06/bebidas-calientes.jpg",
-    "https://www.gob.mx/cms/uploads/article/main_image/24844/aguas.jpg",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS14sRbtoDJIDz3SJ2t1vZ19R5LJhXpSSQIAA&s",
-    "https://s3.amazonaws.com/takami.co/thumbnails/productimage/75399ce2ab6242d8a683d822963e874c/nmj5mo4az3ka7gbkp4ufge_1280_800.jpg",
-    "https://media.gq.com.mx/photos/61e83673f4e647708c8d6205/16:9/w_2992,h_1683,c_limit/diaet-shakes-abnehm-trend-abnehmen-gesundheit-fitness-aufm.jpg",
-    "https://s2.abcstatics.com/media/bienestar/2020/07/04/batidos-saludables-kdhH--1248x698@abc.jpeg",
+    "assets/images/carrusel/alcohol.jpg",
+    "assets/images/carrusel/batidos.jpg",
+    "assets/images/carrusel/calientes.jpg",
+    "assets/images/carrusel/clasicos.jpg",
+    "assets/images/carrusel/fitness.jpg",
+    "assets/images/carrusel/frescas.jpg",
   ];
 
 class _HomeViewState extends State<HomeView> {
@@ -115,7 +115,7 @@ class _HomeViewState extends State<HomeView> {
               const SizedBox(height: 40),
               CarouselSlider(
                 items: imgCarru.map((e) => Center(
-                child: Image.network(
+                child: Image.asset(
                   e,
                   width: MediaQuery.of(context).size.width,
                   height: 200,

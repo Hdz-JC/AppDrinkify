@@ -44,17 +44,18 @@ class CategoriasView extends StatelessWidget{
       ),
       body: Center(
         child: SingleChildScrollView( // <-- Añadido para evitar overflow
-          child: Column(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
+              //Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //children: [
                   Column(
                     children: [
                       TextButton(
                         // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Aguas frescas"),
-                        child: Image.network("https://www.gob.mx/cms/uploads/article/main_image/24844/aguas.jpg",
+                        child: Image.asset("assets/images/carrusel/frescas.jpg",
                         width: 160,
                         height: 120,
                         fit: BoxFit.cover,),
@@ -64,7 +65,7 @@ class CategoriasView extends StatelessWidget{
                       TextButton(
                         // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Calientes"),
-                        child: Image.network("https://lucavending.net/wp-content/uploads/2021/06/bebidas-calientes.jpg",
+                        child: Image.asset("assets/images/carrusel/calientes.jpg",
                         width: 160,
                         height: 120,
                         fit: BoxFit.cover,),
@@ -74,7 +75,7 @@ class CategoriasView extends StatelessWidget{
                       TextButton(
                         // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Con alcohol"),
-                        child: Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS14sRbtoDJIDz3SJ2t1vZ19R5LJhXpSSQIAA&s",
+                        child: Image.asset("assets/images/carrusel/alcohol.jpg",
                         width: 160,
                         height: 120,
                         fit: BoxFit.cover,),
@@ -87,7 +88,7 @@ class CategoriasView extends StatelessWidget{
                       TextButton(
                         // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Jugos Clasicos"),
-                        child: Image.network("https.amazonaws.com/takami.co/thumbnails/productimage/75399ce2ab6242d8a683d822963e874c/nmj5mo4az3ka7gbkp4ufge_1280_800.jpg",
+                        child: Image.asset("assets/images/carrusel/clasicos.jpg",
                         width: 160,
                         height: 120,
                         fit: BoxFit.cover,),
@@ -97,7 +98,7 @@ class CategoriasView extends StatelessWidget{
                       TextButton(
                         // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Jugos fitness"),
-                        child: Image.network("https://media.gq.com.mx/photos/61e83673f4e647708c8d6205/16:9/w_2992,h_1683,c_limit/diaet-shakes-abnehm-trend-abnehmen-gesundheit-fitness-aufm.jpg",
+                        child: Image.asset("assets/images/carrusel/fitness.jpg",
                         width: 160,
                         height: 120,
                         fit: BoxFit.cover,),
@@ -107,7 +108,7 @@ class CategoriasView extends StatelessWidget{
                       TextButton(
                         // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Batidos"),
-                        child: Image.network("httpss2.abcstatics.com/media/bienestar/2020/07/04/batidos-saludables-kdhH--1248x698@abc.jpeg",
+                        child: Image.asset("assets/images/carrusel/batidos.jpg",
                         width: 160,
                         height: 120,
                         fit: BoxFit.cover,
@@ -118,8 +119,8 @@ class CategoriasView extends StatelessWidget{
                       ),
                     ],
                   ),
-                ],
-              ),
+                //],
+              //),
             ],
           ),
         ),
