@@ -2,31 +2,26 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:appdrinkify/models/bebidas_model.dart';
-import 'package:appdrinkify/models/categoria_model.dart'; // <-- AÑADIR
+import 'package:appdrinkify/models/categoria_model.dart';
 
 class SqliteService {
-  // ... (tu singleton se mantiene) ...
   static final SqliteService instance = SqliteService._init();
   static Database? _database;
   SqliteService._init();
 
-  // ... (el 'get database' se mantiene) ...
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDB('bebidas.db');
     return _database!;
   }
-  
-  // (el '_initDB' se mantiene, pero recuerda REINSTALAR la app)
+
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
-  // --- MODIFICADO: Crear ambas tablas ---
   Future _createDB(Database db, int version) async {
-    // 1. Crear tabla de Categorías (PRIMERO)
     await db.execute('''
     CREATE TABLE categorias (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,7 +29,6 @@ class SqliteService {
     )
     ''');
 
-    // 2. Modificar tabla de Bebidas (SEGUNDO)
     await db.execute('''
     CREATE TABLE bebidas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,23 +42,19 @@ class SqliteService {
     ''');
   }
 
-  // --- MODIFICADO: createBebida ---
   Future<int> createBebida(Bebida bebida) async {
     final db = await instance.database;
     return await db.insert('bebidas', bebida.toMap());
   }
 
-  // --- NUEVO: getAllCategorias (por si lo necesitas) ---
   Future<List<Categoria>> getAllCategorias() async {
     final db = await instance.database;
     final result = await db.query('categorias', orderBy: 'nombre ASC');
     return result.map((json) => Categoria.fromMap(json)).toList();
   }
 
-  // --- MODIFICADO: getAllBebidas (AHORA CON JOIN) ---
   Future<List<Bebida>> getAllBebidas() async {
     final db = await instance.database;
-    // Query con JOIN para obtener también el nombre de la categoría
     final result = await db.rawQuery('''
       SELECT 
         b.id, 
@@ -79,15 +69,11 @@ class SqliteService {
       ORDER BY b.nombre ASC
     ''');
     
-    // El 'Bebida.fromMap' ya está listo para recibir 'categoria_nombre'
     return result.map((json) => Bebida.fromMap(json)).toList();
   }
   
-  // --- MODIFICADO: popularDatosIniciales ---
   Future<void> popularDatosIniciales() async {
   final db = await instance.database;
-  
-  // 1. Revisar si las categorías existen. Si no, crearlas.
   int catCount = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM categorias')) ?? 0;
   if (catCount == 0) {
     await db.insert('categorias', {'nombre': 'Aguas frescas'}); // ID = 1
@@ -98,7 +84,6 @@ class SqliteService {
     await db.insert('categorias', {'nombre': 'Batidos'}); // ID = 6
   }
 
-  // 2. Revisar si las bebidas existen. Si no, crearlas.
   int bevCount = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM bebidas')) ?? 0;
   if (bevCount == 0) {
 

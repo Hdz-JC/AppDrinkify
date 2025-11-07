@@ -4,18 +4,17 @@ import '../../models/user_model.dart';
 class SupabaseService {
   final SupabaseClient client = Supabase.instance.client;
 
-  /// Registra un usuario en Supabase
   Future<bool> registerUser(UserModel user) async {
     try {
       final existing = await client
           .from('users')
           .select()
           .eq('email', user.email)
-          .maybeSingle(); // devuelve null si no existe
+          .maybeSingle();
 
       if (existing != null) {
         print('El email ya está registrado');
-        return false; // No permitimos registro duplicado
+        return false;
       }
 
       final response = await client
@@ -27,7 +26,6 @@ class SupabaseService {
           })
           .select(); 
 
-        // Revisamos si hay error manualmente
         if (response == null || (response as List).isEmpty) {
           print('Error al registrar en Supabase');
           return false;
@@ -40,8 +38,6 @@ class SupabaseService {
         return false;
     }
   }
-
-  /// Inicia sesión en Supabase verificando email y password
   Future<UserModel?> loginUser(String email, String password) async {
     try {
       final response = await client
@@ -49,9 +45,7 @@ class SupabaseService {
           .select()
           .eq('email', email)
           .eq('password', password)
-          .maybeSingle(); // No usamos execute()
-
-      // Revisamos si hay datos
+          .maybeSingle();
       if (response != null) {
        return UserModel.fromMap(response);
       }

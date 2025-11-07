@@ -8,15 +8,9 @@ import 'package:appdrinkify/models/bebidas_model.dart';
 class CategoriasView extends StatelessWidget{
   const CategoriasView({super.key});
 
-  // --- AÑADIR ESTA FUNCIÓN HELPER ---
   void _navegarACategoria(BuildContext context, String nombreCategoria) {
-    // 1. Obtener el provider (solo para leer, no escuchar)
     final provider = context.read<BebidaProvider>();
-    
-    // 2. Usar el nuevo método para filtrar las bebidas
     final List<Bebida> bebidasFiltradas = provider.getBebidasPorCategoria(nombreCategoria);
-
-    // 3. Navegar a la nueva vista de lista
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -27,7 +21,6 @@ class CategoriasView extends StatelessWidget{
       ),
     );
   }
-  // --- FIN FUNCIÓN HELPER ---
 
   @override
   Widget build(BuildContext context) {
@@ -41,18 +34,12 @@ class CategoriasView extends StatelessWidget{
         centerTitle: true,
       ),
       body: Center(
-        child: SingleChildScrollView( // <-- Añadido para evitar overflow
+        child: SingleChildScrollView(
           child: Row(
-            //mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              //Row(
-                //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //children: [
                   Column(
-                    //mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       TextButton(
-                        // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Aguas frescas"),
                         child: Image.asset("assets/images/carrusel/frescas.jpg",
                         width: 160,
@@ -62,7 +49,6 @@ class CategoriasView extends StatelessWidget{
                       const Text("Aguas frescas", style: TextStyle(fontSize: 20)),
                       
                       TextButton(
-                        // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Calientes"),
                         child: Image.asset("assets/images/carrusel/calientes.jpg",
                         width: 160,
@@ -72,7 +58,6 @@ class CategoriasView extends StatelessWidget{
                       const Text("Calientes", style: TextStyle(fontSize: 20)),
 
                       TextButton(
-                        // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Con alcohol"),
                         child: Image.asset("assets/images/carrusel/alcohol.jpg",
                         width: 160,
@@ -85,7 +70,6 @@ class CategoriasView extends StatelessWidget{
                   Column(
                     children: [
                       TextButton(
-                        // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Jugos Clasicos"),
                         child: Image.asset("assets/images/carrusel/clasicos.jpg",
                         width: 160,
@@ -95,7 +79,6 @@ class CategoriasView extends StatelessWidget{
                       const Text("Jugos Clasicos", style: TextStyle(fontSize: 20)),
 
                       TextButton(
-                        // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Jugos fitness"),
                         child: Image.asset("assets/images/carrusel/fitness.jpg",
                         width: 160,
@@ -105,7 +88,6 @@ class CategoriasView extends StatelessWidget{
                       const Text("Jugos fitness", style: TextStyle(fontSize: 20)),
                       
                       TextButton(
-                        // --- MODIFICADO ---
                         onPressed:() => _navegarACategoria(context, "Batidos"),
                         child: Image.asset("assets/images/carrusel/batidos.jpg",
                         width: 160,

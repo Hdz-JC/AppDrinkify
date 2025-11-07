@@ -1,6 +1,6 @@
 // lib/views/bebidas_por_categoria_view.dart
 import 'package:flutter/material.dart';
-import 'package:appdrinkify/models/bebidas_model.dart'; // Revisa que este sea tu nombre correcto
+import 'package:appdrinkify/models/bebidas_model.dart';
 
 class BebidasPorCategoriaView extends StatelessWidget {
   final List<Bebida> bebidas;
@@ -16,7 +16,6 @@ class BebidasPorCategoriaView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Título de la vista (ej. "Con alcohol")
         title: Text(categoriaNombre),
       ),
       body: bebidas.isEmpty
@@ -38,14 +37,12 @@ class BebidasPorCategoriaView extends StatelessWidget {
                         Icon(Icons.no_photography, color: Colors.grey),
                   ),
                   title: Text(bebida.nombre),
-                  // Muestra la descripción en lugar de la categoría (ya estás en ella)
                   subtitle: Text(
                     bebida.descripcion, 
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   onTap: () {
-                    // Opcional: Navegar a una pantalla de detalle de la bebida
                   },
                 );
               },

@@ -33,7 +33,6 @@ class AuthProvider extends ChangeNotifier {
   }
 
   void logout() async {
-  // Limpiamos el usuario en memoria
   _currentUser = null;
 
 

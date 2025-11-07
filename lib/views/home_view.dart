@@ -4,12 +4,9 @@ import 'widgets/bottom_nav_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import '../providers/auth_provider.dart';
 import 'package:provider/provider.dart';
-
-// --- AÑADIR ESTOS IMPORTS ---
 import 'package:appdrinkify/providers/bebidas_provider.dart';
-import 'package:appdrinkify/views/search_results_view.dart'; // (La vista que creamos antes)
-import 'package:appdrinkify/models/bebidas_model.dart'; // (El modelo que creamos antes)
-// --- FIN DE IMPORTS ---
+import 'package:appdrinkify/views/search_results_view.dart';
+import 'package:appdrinkify/models/bebidas_model.dart';
 
 
 class HomeView extends StatefulWidget {
@@ -31,30 +28,21 @@ class HomeView extends StatefulWidget {
   ];
 
 class _HomeViewState extends State<HomeView> {
-  
-  // --- AÑADIR UN CONTROLADOR PARA LA BARRA ---
   final TextEditingController _searchController = TextEditingController();
 
-  // --- AÑADIR EL MÉTODO DISPOSE PARA LIMPIAR EL CONTROLADOR ---
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
-  // --- FIN DE AÑADIDOS ---
 
   @override
   Widget build(BuildContext context) {
-
     final username = context.watch<AuthProvider>().currentUser?.username ?? 'Usuario';
-    
-    // --- AÑADIR ESTA LÍNEA (para usarla en el onSubmitted) ---
     final bebidaProvider = context.read<BebidaProvider>();
-
 
     return Scaffold(
       appBar: AppBar(
-        //leading: Icon(Icons.person_rounded, size: 80),
         title: Text('Bienvenido $username',
         style: const TextStyle(
           fontSize: 25,
@@ -81,37 +69,43 @@ class _HomeViewState extends State<HomeView> {
             children: [
               const SizedBox(height: 40),
               
-              // --- MODIFICAR EL WIDGET SearchBar ---
               SearchBar(
-                controller: _searchController, // <-- Añadir
+                controller: _searchController,
                 leading: const Icon(Icons.search),
                 hintText: "Busca una bebida",
-                // Esta es la función que se ejecuta al presionar "Enter"
-                onSubmitted: (String query) { // <-- Añadir
-                  if (query.isNotEmpty) {
-                    // 1. Llama al Provider para obtener la lista de resultados
-                    final List<Bebida> resultados = bebidaProvider.buscarBebidas(query);
-
-                    // 2. Navega a la nueva pantalla de resultados
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SearchResultsView(
-                          resultados: resultados,
-                          query: query,
+                onSubmitted: (String query) {
+                  final String trimmedQuery = query.trim();
+                  final RegExp regexTextoValido = RegExp(r'^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$');
+                  if (trimmedQuery.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Escribe el nombre de una bebida'),
                         ),
-                      ),
-                    );
+              );
 
-                    // 3. Opcional: Limpiar la barra de búsqueda después de buscar
-                    _searchController.clear();
-                    // 4. Opcional: Quitar el foco
-                    FocusScope.of(context).unfocus(); 
-                  }
-                },
+  } else if (!regexTextoValido.hasMatch(trimmedQuery)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Solo puedes buscar bebidas'),
+      ),
+    );
+    
+  } else {
+    final List<Bebida> resultados = bebidaProvider.buscarBebidas(trimmedQuery);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SearchResultsView(
+          resultados: resultados,
+          query: trimmedQuery,
+        ),
+      ),
+    );
+    _searchController.clear();
+    FocusScope.of(context).unfocus();
+  }
+},
               ),
-              // --- FIN DE LA MODIFICACIÓN ---
-              
               const SizedBox(height: 40),
               CarouselSlider(
                 items: imgCarru.map((e) => Center(
