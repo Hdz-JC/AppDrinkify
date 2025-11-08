@@ -1,6 +1,5 @@
-// lib/views/search_results_view.dart
 import 'package:flutter/material.dart';
-import 'package:appdrinkify/models/bebidas_model.dart'; // Revisa que este sea tu nombre correcto
+import 'package:appdrinkify/models/bebidas_model.dart';
 
 class SearchResultsView extends StatelessWidget {
   final List<Bebida> resultados;
@@ -29,7 +28,7 @@ class SearchResultsView extends StatelessWidget {
 
                 return ListTile(
                   leading: Image.asset(
-                    bebida.imageUrl, // Esto usa la nueva ruta
+                    bebida.imageUrl,
                     width: 50,
                     height: 50,
                     fit: BoxFit.cover,
@@ -37,19 +36,12 @@ class SearchResultsView extends StatelessWidget {
                         Icon(Icons.no_photography, color: Colors.grey),
                   ),
                   title: Text(bebida.nombre),
-                  
-                  // --- MODIFICADO: Mostrar nombre de categoría ---
                   subtitle: Text(
-                    // 'categoria_nombre' viene del JOIN en la BD
-                    // Usamos '??' como un valor por defecto si fuera nulo
                     bebida.categoria_nombre ?? 'Sin categoría',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
-                  onTap: () {
-                    // Opcional: Navegar a una pantalla de detalle de la bebida
-                  },
+                  onTap: () {},
                 );
               },
             ),
