@@ -36,6 +36,7 @@ class CategoriasView extends StatelessWidget{
       body: Center(
         child: SingleChildScrollView(
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
                   Column(
                     children: [

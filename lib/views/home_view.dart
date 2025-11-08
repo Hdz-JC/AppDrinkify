@@ -82,29 +82,26 @@ class _HomeViewState extends State<HomeView> {
                         content: Text('Escribe el nombre de una bebida'),
                         ),
               );
-
-  } else if (!regexTextoValido.hasMatch(trimmedQuery)) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Solo puedes buscar bebidas'),
-      ),
-    );
-    
-  } else {
-    final List<Bebida> resultados = bebidaProvider.buscarBebidas(trimmedQuery);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SearchResultsView(
-          resultados: resultados,
-          query: trimmedQuery,
-        ),
-      ),
-    );
-    _searchController.clear();
-    FocusScope.of(context).unfocus();
-  }
-},
+              } else if (!regexTextoValido.hasMatch(trimmedQuery)) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Solo puedes buscar bebidas'),
+                  ),
+                );
+                } else {
+                  final List<Bebida> resultados = bebidaProvider.buscarBebidas(trimmedQuery);
+                  Navigator.push(context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchResultsView(
+                      resultados: resultados,
+                      query: trimmedQuery,
+                    ),
+                  ),
+                );
+                _searchController.clear();
+                FocusScope.of(context).unfocus();
+                }
+              },
               ),
               const SizedBox(height: 40),
               CarouselSlider(

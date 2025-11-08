@@ -29,8 +29,6 @@ class RegistroView extends StatelessWidget {
       final username = usernameController.text.trim();
       final password = passwordController.text;
 
-      // --- VALIDACIONES CON REGEX AÑADIDAS ---
-
       // 1. Validar Email
       // Permite letras, números, y ._%+- antes del @
       // Permite letras, números, y .- después del @
@@ -41,7 +39,7 @@ class RegistroView extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Por favor, ingresa un correo válido')),
         );
-        return; // Detiene la función
+        return;
       }
 
       // 2. Validar Usuario
@@ -55,7 +53,7 @@ class RegistroView extends StatelessWidget {
               content:
                   Text('Usuario inválido (3-20 caracteres, debe empezar con letra)')),
         );
-        return; // Detiene la función
+        return;
       }
 
       // 3. Validar Contraseña
@@ -67,13 +65,8 @@ class RegistroView extends StatelessWidget {
           const SnackBar(
               content: Text('La contraseña debe tener al menos 8 caracteres')),
         );
-        return; // Detiene la función
+        return;
       }
-
-      // --- FIN DE VALIDACIONES ---
-
-      // Tu 'if (email.isEmpty...)' anterior ya no es necesario
-      // porque los regex cubren el caso de que estén vacíos.
 
       final user = UserModel(
         email: email,
@@ -82,10 +75,6 @@ class RegistroView extends StatelessWidget {
       );
 
       try {
-        // Guardar en SQLite (offline)
-        //await SQLiteService.insertUser(user);
-
-        // Guardar en Supabase (online)
         final success = await supabaseService.registerUser(user);
 
         if (success) {
