@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:appdrinkify/providers/bebidas_provider.dart';
 import 'package:appdrinkify/views/search_results_view.dart';
 import 'package:appdrinkify/models/bebidas_model.dart';
+import 'package:appdrinkify/views/detalle_bebida_view.dart';
 
 
 class HomeView extends StatefulWidget {
@@ -39,7 +40,9 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final username = context.watch<AuthProvider>().currentUser?.username ?? 'Usuario';
-    final bebidaProvider = context.read<BebidaProvider>();
+    //final bebidaProvider = context.read<BebidaProvider>();
+    final bebidaProvider = context.watch<BebidaProvider>();
+    final List<Bebida> bebidasCarousel = bebidaProvider.getBebidasPorCategoria("Calientes");
 
     return Scaffold(
       appBar: AppBar(
@@ -104,22 +107,55 @@ class _HomeViewState extends State<HomeView> {
               },
               ),
               const SizedBox(height: 40),
-              CarouselSlider(
-                items: imgCarru.map((e) => Center(
-                child: Image.asset(
-                  e,
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  fit: BoxFit.cover,)
-                )).toList(),
-                options: CarouselOptions(
-                  autoPlay: true,
-                  autoPlayInterval: Duration(seconds: 3),
-                  enlargeCenterPage: true,
-                  enlargeFactor: 0.3,
-                  height: 200,
-                ),
-              ),
+              
+              bebidasCarousel.isEmpty
+                ? Container(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Center(child: Text("Cargando bebidas de temporada...")),
+                  )
+                : // 4. CAMBIO: Modificamos el CarouselSlider
+                  CarouselSlider(
+                    // Ahora usamos la lista dinámica 'bebidasCarousel'
+                    // y 'bebida' es un objeto Bebida, no un String
+                    items: bebidasCarousel.map((bebida) {
+                      // 5. CAMBIO: Envolvemos la imagen en un GestureDetector
+                      // para hacerla "tappable" (clicable)
+                      return GestureDetector(
+                        onTap: () {
+                          // Y la mandamos a la pantalla de detalle
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetalleBebidaView(bebida: bebida),
+                            ),
+                          );
+                        },
+                        child: Center(
+                          child: Image.asset(
+                            bebida.imageUrl, // <--- Usamos la URL de la bebida
+                            width: MediaQuery.of(context).size.width,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            // Añadimos un errorBuilder por si falla la imagen
+                            errorBuilder: (context, error, stackTrace) =>
+                                Icon(Icons.no_photography, color: Colors.grey),
+                          )
+                        ),
+                      );
+                    }).toList(), // <--- Convertimos el map a lista
+                    options: CarouselOptions(
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      enlargeCenterPage: true,
+                      enlargeFactor: 0.3,
+                      height: 200,
+                    ),
+                  ),
               
               const SizedBox(height: 40),
               ElevatedButton(

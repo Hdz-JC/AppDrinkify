@@ -1,6 +1,7 @@
 // lib/views/bebidas_por_categoria_view.dart
 import 'package:flutter/material.dart';
 import 'package:appdrinkify/models/bebidas_model.dart';
+import 'package:appdrinkify/views/detalle_bebida_view.dart'; // <-- AÑADE ESTA LÍNEA
 
 class BebidasPorCategoriaView extends StatelessWidget {
   final List<Bebida> bebidas;
@@ -38,12 +39,31 @@ class BebidasPorCategoriaView extends StatelessWidget {
                   ),
                   title: Text(bebida.nombre),
                   subtitle: Text(
+                    //Icon(Icons.favorite)
+                    //const Icon(Icons.logout),
                     bebida.descripcion, 
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.favorite_border), // Corazón sin rellenar
+                    color: Colors.grey, // Color gris
+                    onPressed: () {
+                      // Aquí irá la lógica para guardar el favorito
+                      print("Le diste fav a ${bebida.nombre}");
+                    },
+                  ),
                   onTap: () {
-                  },
+                    // 1. Navega a la pantalla de detalle
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        // 2. Construye la pantalla y le pasa la 'bebida'
+                        //    a la que le hicieron tap
+                        builder: (context) => DetalleBebidaView(bebida: bebida),
+                        ),
+                      );
+                    },
                 );
               },
             ),

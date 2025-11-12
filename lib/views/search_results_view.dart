@@ -1,5 +1,7 @@
+// lib/views/search_results_view.dart
 import 'package:flutter/material.dart';
 import 'package:appdrinkify/models/bebidas_model.dart';
+import 'package:appdrinkify/views/detalle_bebida_view.dart'; // <-- AÑADE ESTA LÍNEA
 
 class SearchResultsView extends StatelessWidget {
   final List<Bebida> resultados;
@@ -41,7 +43,15 @@ class SearchResultsView extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        // Le pasa la 'bebida' de la lista de resultados
+                        builder: (context) => DetalleBebidaView(bebida: bebida),
+                      ),
+                    );
+                  },
                 );
               },
             ),
