@@ -1,7 +1,11 @@
 // lib/views/bebidas_por_categoria_view.dart
 import 'package:flutter/material.dart';
 import 'package:appdrinkify/models/bebidas_model.dart';
-import 'package:appdrinkify/views/detalle_bebida_view.dart'; // <-- AÑADE ESTA LÍNEA
+import 'package:appdrinkify/views/detalle_bebida_view.dart';
+// --- AÑADIR ESTOS IMPORTS ---
+import 'package:provider/provider.dart';
+import 'package:appdrinkify/providers/favoritos_provider.dart';
+// --- FIN IMPORTS ---
 
 class BebidasPorCategoriaView extends StatelessWidget {
   final List<Bebida> bebidas;
@@ -15,6 +19,9 @@ class BebidasPorCategoriaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // --- AÑADIDO ---
+    final favoritosProvider = context.watch<FavoritosProvider>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(categoriaNombre),
@@ -28,6 +35,9 @@ class BebidasPorCategoriaView extends StatelessWidget {
               itemBuilder: (context, index) {
                 final bebida = bebidas[index];
 
+                // --- AÑADIDO ---
+                final bool esFav = favoritosProvider.esFavorita(bebida.id!);
+
                 return ListTile(
                   leading: Image.asset(
                     bebida.imageUrl,
@@ -39,27 +49,28 @@ class BebidasPorCategoriaView extends StatelessWidget {
                   ),
                   title: Text(bebida.nombre),
                   subtitle: Text(
-                    //Icon(Icons.favorite)
-                    //const Icon(Icons.logout),
                     bebida.descripcion, 
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
+
+                  // --- MODIFICADO: EL ICONO DE FAVORITO ---
                   trailing: IconButton(
-                    icon: const Icon(Icons.favorite_border), // Corazón sin rellenar
-                    color: Colors.grey, // Color gris
+                    icon: Icon(
+                      esFav ? Icons.favorite : Icons.favorite_border,
+                    ),
+                    color: esFav ? Colors.red : Colors.grey,
                     onPressed: () {
-                      // Aquí irá la lógica para guardar el favorito
-                      print("Le diste fav a ${bebida.nombre}");
+                      // Llama al provider
+                      context.read<FavoritosProvider>().toggleFavorito(bebida);
                     },
                   ),
+                  // --- FIN DE MODIFICACIÓN ---
+
                   onTap: () {
-                    // 1. Navega a la pantalla de detalle
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        // 2. Construye la pantalla y le pasa la 'bebida'
-                        //    a la que le hicieron tap
                         builder: (context) => DetalleBebidaView(bebida: bebida),
                         ),
                       );
