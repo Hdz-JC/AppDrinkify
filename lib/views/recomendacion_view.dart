@@ -6,6 +6,10 @@ import 'package:appdrinkify/providers/bebidas_provider.dart'; // Para jalar las 
 import 'package:provider/provider.dart'; // Para usar context.read
 import 'package:shared_preferences/shared_preferences.dart'; // Para la memoria persistente
 
+// --- AÑADIR ESTOS IMPORTS ---
+import 'package:appdrinkify/providers/favoritos_provider.dart';
+// --- FIN DE IMPORTS ---
+
 // 2. CONVERTIMOS A STATEFULWIDGET
 class RecomendacionView extends StatefulWidget {
   const RecomendacionView({super.key});
@@ -43,7 +47,9 @@ class _RecomendacionViewState extends State<RecomendacionView> {
 
     // Fallback por si el provider aún no carga (aunque debería)
     if (provider.listaCompletaBebidas.isEmpty) {
-      setState(() { _isLoading = false; });
+      if (mounted) {
+        setState(() { _isLoading = false; });
+      }
       return;
     }
     
@@ -86,6 +92,17 @@ class _RecomendacionViewState extends State<RecomendacionView> {
 
   @override
   Widget build(BuildContext context) {
+    
+    // --- AÑADIDO: OBTENER EL PROVIDER DE FAVORITOS ---
+    // Usamos 'watch' para que el icono se redibuje al hacer tap
+    final favoritosProvider = context.watch<FavoritosProvider>();
+    
+    // Determinamos si la bebida actual es favorita
+    // Lo hacemos aquí para que el AppBar lo pueda usar
+    final bool esFav = (_bebidaDelDia != null && _bebidaDelDia!.id != null)
+        ? favoritosProvider.esFavorita(_bebidaDelDia!.id!)
+        : false;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -94,6 +111,23 @@ class _RecomendacionViewState extends State<RecomendacionView> {
         ),
         title: const Text('Recomendación del Día'),
         centerTitle: true,
+        // --- AÑADIDO: BOTÓN DE ACCIÓN EN APPBAR ---
+        actions: [
+          // Solo mostramos el botón si la bebida ya cargó
+          if (!_isLoading && _bebidaDelDia != null)
+            IconButton(
+              icon: Icon(
+                esFav ? Icons.favorite : Icons.favorite_border,
+                color: esFav ? Colors.red : Colors.grey,
+              ),
+              onPressed: () {
+                // Llamamos al provider para añadir/quitar
+                // Usamos 'read' porque estamos dentro de un callback
+                context.read<FavoritosProvider>().toggleFavorito(_bebidaDelDia!);
+              },
+            ),
+        ],
+        // --- FIN DE AÑADIDO ---
       ),
       // 7. BODY DINÁMICO
       body: Center(
@@ -107,8 +141,7 @@ class _RecomendacionViewState extends State<RecomendacionView> {
   }
 
   // 8. WIDGET AUXILIAR PARA MOSTRAR LA BEBIDA
-  // (Este es básicamente el código de tu 'DetalleBebidaView'
-  //  pero metido aquí directamente)
+  // (Este widget no necesita cambios)
   Widget _buildDetalleBebida(Bebida bebida) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),

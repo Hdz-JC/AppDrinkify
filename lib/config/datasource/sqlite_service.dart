@@ -29,7 +29,7 @@ class SqliteService {
     await db.execute('''
     CREATE TABLE categorias (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nombre TEXT NOTNULL
+      nombre TEXT NOT NULL 
     )
     ''');
 
@@ -109,7 +109,7 @@ class SqliteService {
   // ===============================================
   // TU GRAN MÉTODO 'popularDatosIniciales'
   // SE QUEDA EXACTAMENTE IGUAL. NO LO TOCAMOS.
-  // ===============================================
+  // =l=============================================
   Future<void> popularDatosIniciales() async {
     final db = await instance.database;
     int catCount = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM categorias')) ?? 0;
@@ -124,8 +124,7 @@ class SqliteService {
 
     int bevCount = Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM bebidas')) ?? 0;
     if (bevCount == 0) {
-      // ... (Tus 30 bebidas van aquí, no lo copio para no hacer bulto) ...
-      // ... (Agua de Jamaica, Mojito, Banana y Avena, etc.) ...
+      // ... (Tus 30 bebidas van aquí) ...
       // ===============================
       // CATEGORÍA 1 - AGUAS FRESCAS
       // ===============================
@@ -342,7 +341,7 @@ class SqliteService {
         nombre: "Mango Tropical",
         descripcion: "Exótico y refrescante.",
         preparacion: "1. En la licuadora, pon 1 taza de mango congelado en cubos.\n2. Añade 1/2 taza de piña (fresca o congelada) y 1 taza de leche de coco (de cartón, para beber).\n3. Licúa hasta obtener una consistencia cremosa y espesa, como un helado suave.",
-        imageUrl: "assets/images/batidos/mango_tropical.jpg",
+imageUrl: "assets/images/batidos/mango_tropical.jpg",
         categoria_id: 6
       ));
       await createBebida(Bebida(

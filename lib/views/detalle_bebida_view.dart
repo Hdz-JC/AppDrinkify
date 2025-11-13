@@ -1,6 +1,12 @@
 import 'package:appdrinkify/models/bebidas_model.dart';
 import 'package:flutter/material.dart';
 
+// --- AÑADIR ESTOS IMPORTS ---
+import 'package:provider/provider.dart';
+import 'package:appdrinkify/providers/favoritos_provider.dart';
+// --- FIN IMPORTS ---
+
+
 class DetalleBebidaView extends StatelessWidget {
   // 1. AÑADIMOS ESTO:
   // Le decimos a la pantalla que NECESITA que le pases
@@ -14,10 +20,37 @@ class DetalleBebidaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    // --- AÑADIDO: OBTENER EL PROVIDER DE FAVORITOS ---
+    // Usamos 'watch' para que el icono se redibuje
+    final favoritosProvider = context.watch<FavoritosProvider>();
+    
+    // Determinamos si la bebida actual es favorita
+    final bool esFav = (bebida.id != null)
+        ? favoritosProvider.esFavorita(bebida.id!)
+        : false;
+    // --- FIN DE AÑADIDO ---
+
     return Scaffold(
       appBar: AppBar(
         //Aqui se debe mostrar el nombre de la bebida a la que se le hizo click
         title: Text(bebida.nombre), // <-- SOLUCIONADO
+        
+        // --- AÑADIDO: BOTÓN DE ACCIÓN EN APPBAR ---
+        actions: [
+          IconButton(
+            icon: Icon(
+              esFav ? Icons.favorite : Icons.favorite_border,
+              color: esFav ? Colors.red : Colors.grey,
+            ),
+            onPressed: () {
+              // Llamamos al provider para añadir/quitar
+              // Usamos 'read' porque estamos dentro de un callback
+              context.read<FavoritosProvider>().toggleFavorito(bebida);
+            },
+          ),
+        ],
+        // --- FIN DE AÑADIDO ---
       ),
       //todo debe de estar centrado
       body: Center(
