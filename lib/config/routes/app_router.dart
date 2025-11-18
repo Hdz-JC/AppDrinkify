@@ -1,13 +1,13 @@
 import 'package:go_router/go_router.dart';
-import 'views/inicio_app.dart';
-import 'views/login_view.dart';
-import 'views/registro_view.dart';
-import 'views/home_view.dart';
-import 'views/favoritos_view.dart';
-import 'views/agregar_view.dart';
-import 'views/listas_view.dart';
-import 'views/categorias_view.dart';
-import 'views/recomendacion_view.dart';
+import '../../views/inicio_app.dart';
+import '../../views/login_view.dart';
+import '../../views/registro_view.dart';
+import '../../views/home_view.dart';
+import '../../views/favoritos_view.dart';
+import '../../views/agregar_view.dart';
+import '../../views/listas_view.dart';
+import '../../views/categorias_view.dart';
+import '../../views/recomendacion_view.dart';
 
 GoRouter createRouter() {
   return GoRouter(

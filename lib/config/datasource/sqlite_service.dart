@@ -1,4 +1,5 @@
 // lib/config/datasource/sqlite_service.dart
+import 'package:appdrinkify/models/lista_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:appdrinkify/models/bebidas_model.dart';
@@ -21,7 +22,7 @@ class SqliteService {
     // --- MODIFICADO ---
     // Subimos la versión a 2 porque cambiamos la estructura
     // Añadimos onUpgrade para manejar la migración
-    return await openDatabase(path, version: 2, onCreate: _createDB, onUpgrade: _onUpgrade);
+    return await openDatabase(path, version: 4, onCreate: _createDB, onUpgrade: _onUpgrade);
   }
 
   Future _createDB(Database db, int version) async {
@@ -29,7 +30,8 @@ class SqliteService {
     await db.execute('''
     CREATE TABLE categorias (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nombre TEXT NOT NULL 
+      nombre TEXT NOT NULL,
+      is_featured BOOLEAN DEFAULT 0 
     )
     ''');
 
@@ -56,14 +58,33 @@ class SqliteService {
       UNIQUE (user_id, bebida_id)
     )
     ''');
+
+    // --- AÑADIDO (v4) ---
+    await db.execute('''
+    CREATE TABLE listas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT NOT NULL,
+      user_id TEXT NOT NULL
+    )
+    ''');
+    
+    await db.execute('''
+    CREATE TABLE lista_bebidas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      lista_id INTEGER NOT NULL,
+      bebida_id INTEGER NOT NULL,
+      FOREIGN KEY (lista_id) REFERENCES listas (id) ON DELETE CASCADE,
+      FOREIGN KEY (bebida_id) REFERENCES bebidas (id) ON DELETE CASCADE
+    )
+    ''');
   }
 
   // --- AÑADIDO ---
   // Esta función se ejecuta si la BD ya existe pero la versión es antigua
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    // Para usuarios que ya tenían la app
     if (oldVersion < 2) {
-      // El usuario estaba en v1, solo necesita la nueva tabla 'favoritos'
-      // No tocamos 'bebidas' ni 'categorias' para no perder sus datos.
+      // (Migración de v1 a v2)
       await db.execute('''
       CREATE TABLE favoritos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,6 +92,30 @@ class SqliteService {
         bebida_id INTEGER NOT NULL,
         FOREIGN KEY (bebida_id) REFERENCES bebidas (id) ON DELETE CASCADE,
         UNIQUE (user_id, bebida_id)
+      )
+      ''');
+    }
+    if (oldVersion < 3) {
+      // (Migración de v2 a v3)
+      await db.execute('ALTER TABLE categorias ADD COLUMN is_featured BOOLEAN DEFAULT 0');
+    }
+    // --- AÑADIDO (v4) ---
+    if (oldVersion < 4) {
+      // (Migración de v3 a v4)
+      await db.execute('''
+      CREATE TABLE listas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL,
+        user_id TEXT NOT NULL
+      )
+      ''');
+      await db.execute('''
+      CREATE TABLE lista_bebidas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        lista_id INTEGER NOT NULL,
+        bebida_id INTEGER NOT NULL,
+        FOREIGN KEY (lista_id) REFERENCES listas (id) ON DELETE CASCADE,
+        FOREIGN KEY (bebida_id) REFERENCES bebidas (id) ON DELETE CASCADE
       )
       ''');
     }
@@ -105,6 +150,123 @@ class SqliteService {
     
     return result.map((json) => Bebida.fromMap(json)).toList();
   }
+
+  // Listas
+  Future<List<Bebida>> getFeaturedBebidas() async {
+    final db = await instance.database;
+    final result = await db.rawQuery('''
+      SELECT 
+        b.id, 
+        b.nombre, 
+        b.descripcion, 
+        b.preparacion, 
+        b.image_url, 
+        b.categoria_id, 
+        c.nombre as categoria_nombre 
+      FROM bebidas b
+      JOIN categorias c ON b.categoria_id = c.id
+      WHERE c.is_featured = 1
+    ''');
+    
+    return result.map((json) => Bebida.fromMap(json)).toList();
+  }
+  // --- AÑADIDOS: MÉTODOS CRUD PARA LISTAS ---
+
+  // Crear una nueva lista (CON BEBIDAS RANDOM)
+  Future<Lista> createLista(String nombre, String userId, List<int> categoriaIds) async {
+    final db = await instance.database;
+    
+    return await db.transaction((txn) async {
+      // 1. Crear la lista
+      final Map<String, dynamic> listaMap = {'nombre': nombre, 'user_id': userId};
+      final int listaId = await txn.insert('listas', listaMap);
+      
+      // 2. Generar los placeholders para la query SQL (?,?,?)
+      String placeholders = List.filled(categoriaIds.length, '?').join(',');
+
+      // --- LA MAGIA DEL RANDOM ESTÁ AQUÍ ---
+      // Seleccionamos IDs donde la categoría coincida,
+      // pero los ordenamos AL AZAR (Random) y limitamos a 10 (o el número que quieras).
+      final List<Map<String, dynamic>> bebidasRandom = await txn.rawQuery(
+        '''
+        SELECT id FROM bebidas 
+        WHERE categoria_id IN ($placeholders) 
+        ORDER BY RANDOM() 
+        LIMIT 10
+        ''',
+        categoriaIds, // Pasamos los IDs de las categorías seleccionadas
+      );
+      
+      // 3. Insertar las relaciones
+      final batch = txn.batch();
+      for (final bebida in bebidasRandom) {
+        batch.insert('lista_bebidas', {
+          'lista_id': listaId,
+          'bebida_id': bebida['id'],
+        });
+      }
+      await batch.commit(noResult: true);
+      
+      return Lista(id: listaId, nombre: nombre, userId: userId);
+    });
+  }
+
+  // Obtener todas las listas de un usuario
+  Future<List<Lista>> getListasPorUsuario(String userId) async {
+    final db = await instance.database;
+    final result = await db.query(
+      'listas',
+      where: 'user_id = ?',
+      whereArgs: [userId],
+    );
+    return result.map((json) => Lista.fromMap(json)).toList();
+  }
+
+  // Renombrar una lista
+  Future<int> renameLista(int listaId, String nuevoNombre) async {
+    final db = await instance.database;
+    return await db.update(
+      'listas',
+      {'nombre': nuevoNombre},
+      where: 'id = ?',
+      whereArgs: [listaId],
+    );
+  }
+
+  // Borrar una lista (gracias a ON DELETE CASCADE, esto borra
+  // automáticamente las entradas en 'lista_bebidas' también)
+  Future<int> deleteLista(int listaId) async {
+    final db = await instance.database;
+    return await db.delete(
+      'listas',
+      where: 'id = ?',
+      whereArgs: [listaId],
+    );
+  }
+
+  // Obtener todas las bebidas de UNA lista
+  Future<List<Bebida>> getBebidasPorLista(int listaId) async {
+    final db = await instance.database;
+    // Query casi idéntica a la de favoritos
+    final result = await db.rawQuery('''
+      SELECT 
+        b.id, 
+        b.nombre, 
+        b.descripcion, 
+        b.preparacion, 
+        b.image_url, 
+        b.categoria_id, 
+        c.nombre as categoria_nombre 
+      FROM bebidas b
+      JOIN categorias c ON b.categoria_id = c.id
+      JOIN lista_bebidas lb ON b.id = lb.bebida_id
+      WHERE lb.lista_id = ?
+    ''', [listaId]);
+
+    return result.map((json) => Bebida.fromMap(json)).toList();
+  }
+  //
+
   
   // ===============================================
   // TU GRAN MÉTODO 'popularDatosIniciales'
