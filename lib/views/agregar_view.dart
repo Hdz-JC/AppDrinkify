@@ -54,8 +54,6 @@ class _AgregarViewState extends State<AgregarView> {
       return;
     }
 
-    // Permite: a-z, A-Z, 0-9, espacios (\s) y letras con acentos/ñ del español.
-    // Rechaza automáticamente: " ' = % ( ) @ # etc.
     final validCharacters = RegExp(r'^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ]+$');
     
     if (!validCharacters.hasMatch(nombre)) {
@@ -68,8 +66,6 @@ class _AgregarViewState extends State<AgregarView> {
       return;
     }
 
-    // --- VALIDACIÓN 3: PALABRAS PROHIBIDAS (SQL) ---
-    // Lista de palabras que no quieres (en minúsculas)
     final forbiddenWords = ['select', 'where', 'like', 'drop', 'delete', 'update', 'insert', 'table'];
     final nombreMinusculas = nombre.toLowerCase();
 
@@ -139,7 +135,7 @@ class _AgregarViewState extends State<AgregarView> {
                   const SizedBox(height: 10),
                   const Text(
                     "Elige un nombre y las categorías. Nosotros seleccionaremos bebidas al azar para ti.",
-                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
@@ -161,7 +157,6 @@ class _AgregarViewState extends State<AgregarView> {
                   const SizedBox(height: 8),
 
                   ListView.builder(
-                    shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _categoriasDisponibles.length,
                     itemBuilder: (context, index) {
@@ -170,7 +165,8 @@ class _AgregarViewState extends State<AgregarView> {
                         activeColor: Color.fromRGBO(251, 83, 21, 1),
                         title: Text(categoria.nombre),
                         value: _categoriasSeleccionadas[categoria.id!],
-                        onChanged: (bool? value) {
+                        onChanged: (bool? value)
+                        {
                           setState(() {
                             _categoriasSeleccionadas[categoria.id!] = value ?? false;
                           });

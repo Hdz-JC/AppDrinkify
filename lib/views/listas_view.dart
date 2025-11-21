@@ -14,8 +14,7 @@ class ListasView extends StatelessWidget {
     final listasProvider = context.watch<ListasProvider>();
     final List<Lista> misListas = listasProvider.misListas;
 
-    return Scaffold( 
-      
+    return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
@@ -33,7 +32,6 @@ class ListasView extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // --- CAMBIO DE ICONO GRANDE ---
                       const Icon(Icons.liquor, size: 80, color: Color.fromARGB(255, 0, 0, 0)), 
                       const SizedBox(height: 16),
                       const Text(
