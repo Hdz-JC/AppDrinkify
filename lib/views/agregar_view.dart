@@ -1,4 +1,3 @@
-// lib/views/agregar_view.dart
 import 'package:appdrinkify/views/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +22,6 @@ class _AgregarViewState extends State<AgregarView> {
   @override
   void initState() {
     super.initState();
-    // Un pequeño delay para asegurar que el provider esté listo
     Future.microtask(() => _cargarCategorias());
   }
 
@@ -34,7 +32,6 @@ class _AgregarViewState extends State<AgregarView> {
       setState(() {
         _categoriasDisponibles = categorias;
         for (var cat in categorias) {
-          // Inicializamos desmarcadas
           _categoriasSeleccionadas[cat.id!] = false;
         }
         _isLoading = false;
@@ -49,9 +46,7 @@ class _AgregarViewState extends State<AgregarView> {
   }
 
   Future<void> _crearLista() async {
-    final nombre = _nombreController.text.trim(); // Quitamos espacios al inicio/final
-
-    // --- VALIDACIÓN 1: CAMPO VACÍO ---
+    final nombre = _nombreController.text.trim();
     if (nombre.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ponle un nombre a tu mix')),
@@ -59,7 +54,6 @@ class _AgregarViewState extends State<AgregarView> {
       return;
     }
 
-    // --- VALIDACIÓN 2: CARACTERES PERMITIDOS (REGEX) ---
     // Permite: a-z, A-Z, 0-9, espacios (\s) y letras con acentos/ñ del español.
     // Rechaza automáticamente: " ' = % ( ) @ # etc.
     final validCharacters = RegExp(r'^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ]+$');
@@ -80,7 +74,6 @@ class _AgregarViewState extends State<AgregarView> {
     final nombreMinusculas = nombre.toLowerCase();
 
     for (var word in forbiddenWords) {
-      // Usamos \b para buscar la palabra exacta (que "selecta" no active "select")
       if (RegExp(r'\b' + word + r'\b').hasMatch(nombreMinusculas)) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -105,13 +98,9 @@ class _AgregarViewState extends State<AgregarView> {
     }
 
     try {
-      // Esto llama al método que modificamos en SqliteService
-      // para crear una lista RANDOM de 10 bebidas.
       await context.read<ListasProvider>().createLista(nombre, seleccionadas);
-      
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Playlist "$nombre" creada!')));
-        // Redirigimos a la vista de Listas para ver el resultado
         NavigationController.navigateTo(context, '/listas');
       }
 
@@ -125,7 +114,9 @@ class _AgregarViewState extends State<AgregarView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         title: const Text('Crear Mix'),
         centerTitle: true,
       ),
@@ -149,7 +140,6 @@ class _AgregarViewState extends State<AgregarView> {
                   ),
                   const SizedBox(height: 24),
                   
-                  // Input del nombre
                   TextField(
                     controller: _nombreController,
                     decoration: const InputDecoration(
@@ -166,7 +156,6 @@ class _AgregarViewState extends State<AgregarView> {
                   ),
                   const SizedBox(height: 8),
 
-                  // Lista de Checkboxes
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -187,10 +176,9 @@ class _AgregarViewState extends State<AgregarView> {
                   ),
                   const SizedBox(height: 24),
                   
-                  // Botón Crear
                   ElevatedButton.icon(
                     onPressed: _crearLista,
-                    icon: const Icon(Icons.auto_awesome), // Icono mágico
+                    icon: const Icon(Icons.auto_awesome),
                     label: const Text('Generar Mix Aleatorio', style: TextStyle(fontSize: 18)),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),

@@ -7,24 +7,13 @@ class InicioApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Bienvenido a Drinkify',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 40),
-
-            const Icon(
-              Icons.person_rounded,
-              size: 150,
+            Image.asset("assets/logo/drinkifyblanco.png",
+              height: 320,
             ),
 
             const SizedBox(height: 50),
@@ -35,10 +24,16 @@ class InicioApp extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                backgroundColor: Color.fromRGBO(251, 83, 21, 1),
               ),
               child: const Text(
                 'Iniciar sesión',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontWeight: FontWeight.bold,
+                ),
+                
               ),
             ),
 
@@ -50,10 +45,14 @@ class InicioApp extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                backgroundColor: Color.fromRGBO(255, 255, 255, 1),
               ),
               child: const Text(
                 'Registrarse',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  ),
               ),
             ),
           ],

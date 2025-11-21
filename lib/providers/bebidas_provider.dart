@@ -11,15 +11,14 @@ class BebidaProvider extends ChangeNotifier {
 
   List<Bebida> _listaCompletaBebidas = [];
   List<Bebida> _featuredBebidas = [];
-  List<Categoria> _todasCategorias = []; // <-- AÑADIDO
+  List<Categoria> _todasCategorias = [];
   bool _isLoading = false;
   final Random _random = Random();
 
-  // --- GETTERS ---
   bool get isLoading => _isLoading;
   List<Bebida> get listaCompletaBebidas => _listaCompletaBebidas;
   List<Bebida> get featuredBebidas => _featuredBebidas;
-  List<Categoria> get todasCategorias => _todasCategorias; // <-- AÑADIDO
+  List<Categoria> get todasCategorias => _todasCategorias;
 
   BebidaProvider() {
     _inicializar();
@@ -32,7 +31,7 @@ class BebidaProvider extends ChangeNotifier {
     await _sqliteService.popularDatosIniciales();
     _listaCompletaBebidas = await _sqliteService.getAllBebidas();
     _featuredBebidas = await _sqliteService.getFeaturedBebidas();
-    _todasCategorias = await _sqliteService.getAllCategorias(); // <-- AÑADIDO
+    _todasCategorias = await _sqliteService.getAllCategorias();
     
     _isLoading = false;
     notifyListeners();

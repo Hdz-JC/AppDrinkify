@@ -1,42 +1,28 @@
 import 'package:appdrinkify/models/bebidas_model.dart';
 import 'package:flutter/material.dart';
-
-// --- AÑADIR ESTOS IMPORTS ---
 import 'package:provider/provider.dart';
 import 'package:appdrinkify/providers/favoritos_provider.dart';
-// --- FIN IMPORTS ---
-
 
 class DetalleBebidaView extends StatelessWidget {
-  // 1. AÑADIMOS ESTO:
-  // Le decimos a la pantalla que NECESITA que le pases
-  // un objeto 'Bebida' para poder construirse.
   final Bebida bebida;
 
   const DetalleBebidaView({
     super.key,
-    required this.bebida, // <-- Se hace obligatorio
+    required this.bebida,
   });
 
   @override
   Widget build(BuildContext context) {
-    
-    // --- AÑADIDO: OBTENER EL PROVIDER DE FAVORITOS ---
-    // Usamos 'watch' para que el icono se redibuje
     final favoritosProvider = context.watch<FavoritosProvider>();
-    
-    // Determinamos si la bebida actual es favorita
     final bool esFav = (bebida.id != null)
         ? favoritosProvider.esFavorita(bebida.id!)
         : false;
-    // --- FIN DE AÑADIDO ---
 
     return Scaffold(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
-        //Aqui se debe mostrar el nombre de la bebida a la que se le hizo click
-        title: Text(bebida.nombre), // <-- SOLUCIONADO
-        
-        // --- AÑADIDO: BOTÓN DE ACCIÓN EN APPBAR ---
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        title: Text(bebida.nombre),
         actions: [
           IconButton(
             icon: Icon(
@@ -44,35 +30,25 @@ class DetalleBebidaView extends StatelessWidget {
               color: esFav ? Colors.red : Colors.grey,
             ),
             onPressed: () {
-              // Llamamos al provider para añadir/quitar
-              // Usamos 'read' porque estamos dentro de un callback
               context.read<FavoritosProvider>().toggleFavorito(bebida);
             },
           ),
         ],
-        // --- FIN DE AÑADIDO ---
       ),
-      //todo debe de estar centrado
       body: Center(
-        // 2. AÑADIMOS UN SCROLL
-        // Para que si las instrucciones son muy largas, no se rompa la pantalla
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0), // Un poco de espacio en los bordes
-          // 3. AÑADIMOS LA COLUMNA
-          // La Columna nos deja poner widgets uno encima de otro.
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // aqui se mostrara la imagen de la bebida seleccioanda
-              ClipRRect( // Para redondear las esquinas
+              ClipRRect(
                 borderRadius: BorderRadius.circular(12.0),
                 child: Image.asset(
-                  bebida.imageUrl, // <-- SOLUCIONADO
+                  bebida.imageUrl,
                   height: 250,
                   width: 250,
                   fit: BoxFit.cover,
-                  // Un 'errorBuilder' por si no se encuentra la imagen
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
                       height: 250,
@@ -85,32 +61,28 @@ class DetalleBebidaView extends StatelessWidget {
               ),
               const SizedBox(height: 16), // Espacio
 
-              // aqui se mostrara el nombre de la categoria a la que pertenece la bebida
               Text(
-                // Usamos '??' por si 'categoria_nombre' es nulo
-                bebida.categoria_nombre ?? 'Sin Categoría', // <-- SOLUCIONADO
+                bebida.categoria_nombre ?? 'Sin Categoría',
                 style: const TextStyle(
                   fontSize: 16,
                   fontStyle: FontStyle.italic,
                   color: Colors.grey,
                 ),
               ),
-              const SizedBox(height: 24), // Más espacio
+              const SizedBox(height: 24),
 
-              // aqui se mostrara la palabra instrucciones en grande
               const Text(
-                "Instrucciones", // <-- SOLUCIONADO
+                "Instrucciones",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8), // Espacio
+              const SizedBox(height: 8),
 
-              // aqui se mostraran las instrucciones paso a paso
               Text(
-                bebida.preparacion, // <-- SOLUCIONADO
-                textAlign: TextAlign.center, // Para que el texto se vea centrado
+                bebida.preparacion,
+                textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 16),
               ),
             ],

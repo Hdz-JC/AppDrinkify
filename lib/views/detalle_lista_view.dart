@@ -30,7 +30,9 @@ class _DetalleListaViewState extends State<DetalleListaView> {
     final favoritosProvider = context.watch<FavoritosProvider>();
     
     return Scaffold(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         title: Text(widget.lista.nombre),
       ),
       body: FutureBuilder<List<Bebida>>(

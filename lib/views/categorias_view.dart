@@ -25,7 +25,9 @@ class CategoriasView extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         leading: IconButton(
             onPressed:()=> NavigationController.navigateTo(context,'/home'),
             icon: const Icon(Icons.arrow_back),

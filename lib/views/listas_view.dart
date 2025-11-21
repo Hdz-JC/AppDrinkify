@@ -15,7 +15,9 @@ class ListasView extends StatelessWidget {
     final List<Lista> misListas = listasProvider.misListas;
 
     return Scaffold(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         title: const Text('Mis Mixes'), // Cambié "Listas" por "Mixes" (suena mejor)
         centerTitle: true,
       ),

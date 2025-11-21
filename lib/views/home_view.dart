@@ -40,12 +40,13 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final username = context.watch<AuthProvider>().currentUser?.username ?? 'Usuario';
-    //final bebidaProvider = context.read<BebidaProvider>();
     final bebidaProvider = context.watch<BebidaProvider>();
     final List<Bebida> bebidasCarousel = bebidaProvider.getBebidasPorCategoria("Calientes");
 
     return Scaffold(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         title: Text('Bienvenido $username',
         style: const TextStyle(
           fontSize: 25,
@@ -63,14 +64,13 @@ class _HomeViewState extends State<HomeView> {
           ),
         ],
       ),
-      body: Center(
-        child: Padding(
+      body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
               
               SearchBar(
                 controller: _searchController,
@@ -106,7 +106,7 @@ class _HomeViewState extends State<HomeView> {
                 }
               },
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 50),
               
               bebidasCarousel.isEmpty
                 ? Container(
@@ -118,16 +118,11 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     child: const Center(child: Text("Cargando bebidas de temporada...")),
                   )
-                : // 4. CAMBIO: Modificamos el CarouselSlider
+                :
                   CarouselSlider(
-                    // Ahora usamos la lista dinámica 'bebidasCarousel'
-                    // y 'bebida' es un objeto Bebida, no un String
                     items: bebidasCarousel.map((bebida) {
-                      // 5. CAMBIO: Envolvemos la imagen en un GestureDetector
-                      // para hacerla "tappable" (clicable)
                       return GestureDetector(
                         onTap: () {
-                          // Y la mandamos a la pantalla de detalle
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -137,17 +132,16 @@ class _HomeViewState extends State<HomeView> {
                         },
                         child: Center(
                           child: Image.asset(
-                            bebida.imageUrl, // <--- Usamos la URL de la bebida
+                            bebida.imageUrl,
                             width: MediaQuery.of(context).size.width,
                             height: 200,
                             fit: BoxFit.cover,
-                            // Añadimos un errorBuilder por si falla la imagen
                             errorBuilder: (context, error, stackTrace) =>
                                 Icon(Icons.no_photography, color: Colors.grey),
                           )
                         ),
                       );
-                    }).toList(), // <--- Convertimos el map a lista
+                    }).toList(),
                     options: CarouselOptions(
                       autoPlay: true,
                       autoPlayInterval: const Duration(seconds: 3),
@@ -157,16 +151,19 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
               
-              const SizedBox(height: 40),
+              const SizedBox(height: 50),
               ElevatedButton(
-                //onPressed: () {},
                 onPressed:()=> NavigationController.navigateTo(context,'/categorias'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 15),
+                  backgroundColor: Color.fromRGBO(255, 255, 255, 1),
                 ),
                 child: const Text(
                   'Ver categorias',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 0, 0, 0)
+                  ),
                 ),
               ),
               const SizedBox(height: 40),
@@ -174,19 +171,21 @@ class _HomeViewState extends State<HomeView> {
                 onPressed:()=> NavigationController.navigateTo(context,'/recomendacion'),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  backgroundColor: Color.fromRGBO(255, 255, 255, 1),
                 ),
                 child: const Text(
                   'Recomendación del día',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 0, 0, 0)
+                  ),
                 ),
               ),
             ],
           ),
           ),
-        ),
       ),
       bottomNavigationBar: const BottomNavBar(),
     );
   }
-  
 }

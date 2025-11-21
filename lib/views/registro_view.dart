@@ -103,25 +103,32 @@ class RegistroView extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+      /*appBar: AppBar(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         title: const Text('Registro de Usuario'),
         centerTitle: true,
-      ),
+      ),*/
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.person_add_rounded, size: 120),
+              //const Icon(Icons.person_add_rounded, size: 120),
+              Image.asset("assets/logo/drinkifyblanco.png",
+              height: 220,
+            ),
               const SizedBox(height: 30),
 
               // Campo Email
               TextField(
                 controller: emailController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                   prefixIcon: Icon(Icons.email_outlined),
                 ),
               ),
@@ -130,9 +137,11 @@ class RegistroView extends StatelessWidget {
               // Campo Usuario
               TextField(
                 controller: usernameController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Usuario',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                   prefixIcon: Icon(Icons.person_outline),
                 ),
               ),
@@ -142,9 +151,11 @@ class RegistroView extends StatelessWidget {
               TextField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Contraseña',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                   prefixIcon: Icon(Icons.lock_outline),
                 ),
               ),
@@ -155,15 +166,25 @@ class RegistroView extends StatelessWidget {
                 onPressed: register,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  backgroundColor: Color.fromRGBO(251, 83, 21, 1),
                 ),
-                child: const Text('Registrar', style: TextStyle(fontSize: 18)),
+                child: const Text('Registrar', style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                  fontWeight: FontWeight.bold,
+                )
+                ),
               ),
               const SizedBox(height: 20),
 
               // Botón Regresar
               TextButton(
                 onPressed: () => NavigationController.navigateTo(context, '/inicio'),
-                child: const Text('Regresar', style: TextStyle(fontSize: 16)),
+                child: const Text('Regresar', style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromARGB(255, 0, 0, 0)
+                  )
+                  ),
               ),
             ],
           ),

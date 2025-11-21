@@ -23,7 +23,9 @@ class BebidasPorCategoriaView extends StatelessWidget {
     final favoritosProvider = context.watch<FavoritosProvider>();
 
     return Scaffold(
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         title: Text(categoriaNombre),
       ),
       body: bebidas.isEmpty
