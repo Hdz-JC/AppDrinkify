@@ -117,8 +117,12 @@ class _AgregarViewState extends State<AgregarView> {
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        title: const Text('Crear Mix'),
-        centerTitle: true,
+        title: const Text('Crear Mix',
+          style: TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+        ),
+        ),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -135,7 +139,7 @@ class _AgregarViewState extends State<AgregarView> {
                   const SizedBox(height: 10),
                   const Text(
                     "Elige un nombre y las categorías. Nosotros seleccionaremos bebidas al azar para ti.",
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 24),
@@ -163,7 +167,7 @@ class _AgregarViewState extends State<AgregarView> {
                     itemBuilder: (context, index) {
                       final categoria = _categoriasDisponibles[index];
                       return CheckboxListTile(
-                        activeColor: Colors.deepPurple,
+                        activeColor: Color.fromRGBO(251, 83, 21, 1),
                         title: Text(categoria.nombre),
                         value: _categoriasSeleccionadas[categoria.id!],
                         onChanged: (bool? value) {
@@ -182,7 +186,7 @@ class _AgregarViewState extends State<AgregarView> {
                     label: const Text('Generar Mix Aleatorio', style: TextStyle(fontSize: 18)),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Colors.deepPurple,
+                      backgroundColor: Color.fromRGBO(251, 83, 21, 1),
                       foregroundColor: Colors.white,
                     ),
                   ),

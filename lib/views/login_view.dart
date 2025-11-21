@@ -58,18 +58,12 @@ class LoginView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-      /*appBar: AppBar(
-        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        title: const Text('Iniciar Sesión'),
-        centerTitle: true,
-      ),*/
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //const Icon(Icons.person_rounded, size: 120),
               Image.asset("assets/logo/drinkifyblanco.png",
               height: 220,
             ),

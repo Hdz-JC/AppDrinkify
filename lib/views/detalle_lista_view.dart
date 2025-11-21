@@ -32,7 +32,7 @@ class _DetalleListaViewState extends State<DetalleListaView> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        backgroundColor: Color.fromRGBO(250, 250, 250, 1),
         title: Text(widget.lista.nombre),
       ),
       body: FutureBuilder<List<Bebida>>(
@@ -48,7 +48,7 @@ class _DetalleListaViewState extends State<DetalleListaView> {
             return const Center(
               child: Text(
                 'Esta lista está vacía.',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 255, 255, 255)),
               ),
             );
           }
@@ -73,8 +73,8 @@ class _DetalleListaViewState extends State<DetalleListaView> {
                     fit: BoxFit.cover,
                     // --- CAMBIO: ICONO DE FALLBACK ---
                     errorBuilder: (context, error, stackTrace) => Container(
-                       width: 60, height: 60, color: Colors.grey.shade200,
-                       child: const Icon(Icons.local_drink, color: Colors.grey),
+                       width: 60, height: 60, color: const Color.fromARGB(255, 255, 255, 255),
+                       child: const Icon(Icons.local_drink, color: Color.fromARGB(255, 255, 255, 255)),
                     ),
                   ),
                 ),
@@ -87,11 +87,11 @@ class _DetalleListaViewState extends State<DetalleListaView> {
                 subtitle: Row(
                   children: [
                     // Pequeño icono de etiqueta
-                    const Icon(Icons.label_outline, size: 14, color: Colors.deepPurple),
+                    const Icon(Icons.label_outline, size: 14, color: Color.fromRGBO(251, 83, 21, 1)),
                     const SizedBox(width: 4),
                     Text(
                       bebida.categoria_nombre ?? 'General',
-                      style: TextStyle(color: Colors.deepPurple.shade700),
+                      style: TextStyle(color: Color.fromRGBO(251, 83, 21, 1)),
                     ),
                   ],
                 ),
@@ -99,7 +99,7 @@ class _DetalleListaViewState extends State<DetalleListaView> {
                 trailing: IconButton(
                   icon: Icon(
                     esFav ? Icons.favorite : Icons.favorite_border,
-                    color: esFav ? Colors.red : Colors.grey,
+                    color: esFav ? Colors.red : const Color.fromARGB(255, 255, 255, 255),
                   ),
                   onPressed: () {
                     context.read<FavoritosProvider>().toggleFavorito(bebida);

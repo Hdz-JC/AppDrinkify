@@ -48,9 +48,9 @@ class BottomNavBar extends StatelessWidget {
           }
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoritos'),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Agregar'),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Crear'),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Listas'),
         ],
       ),

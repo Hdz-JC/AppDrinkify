@@ -1,6 +1,3 @@
-// lib/providers/bebida_provider.dart
-import 'dart:math';
-
 import 'package:appdrinkify/models/categoria_model.dart';
 import 'package:flutter/material.dart';
 import 'package:appdrinkify/models/bebidas_model.dart';
@@ -13,7 +10,7 @@ class BebidaProvider extends ChangeNotifier {
   List<Bebida> _featuredBebidas = [];
   List<Categoria> _todasCategorias = [];
   bool _isLoading = false;
-  final Random _random = Random();
+  //final Random _random = Random();
 
   bool get isLoading => _isLoading;
   List<Bebida> get listaCompletaBebidas => _listaCompletaBebidas;

@@ -17,7 +17,12 @@ class FavoritosView extends StatelessWidget {
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        title: const Text('Mis Favoritos')
+        title: const Text('Mis Favoritos',
+          style: TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+        ),
+        )
       ),
       body: favoritosProvider.isLoading
           ? const Center(child: CircularProgressIndicator())

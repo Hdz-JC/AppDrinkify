@@ -19,15 +19,6 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-  final List<String> imgCarru = [
-    "assets/images/carrusel/alcohol.jpg",
-    "assets/images/carrusel/batidos.jpg",
-    "assets/images/carrusel/calientes.jpg",
-    "assets/images/carrusel/clasicos.jpg",
-    "assets/images/carrusel/fitness.jpg",
-    "assets/images/carrusel/frescas.jpg",
-  ];
-
 class _HomeViewState extends State<HomeView> {
   final TextEditingController _searchController = TextEditingController();
 
@@ -41,7 +32,39 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final username = context.watch<AuthProvider>().currentUser?.username ?? 'Usuario';
     final bebidaProvider = context.watch<BebidaProvider>();
-    final List<Bebida> bebidasCarousel = bebidaProvider.getBebidasPorCategoria("Calientes");
+
+    int mesActual = DateTime.now().month;
+    String categoriaTemporada = "";
+
+    switch (mesActual) {
+      case 12: // Diciembre
+      case 1:  // Enero
+      case 2:  // Febrero
+        categoriaTemporada = "Calientes";
+        break;
+
+      case 3: // Marzo
+      case 4: // Abril
+      case 5: // Mayo
+        categoriaTemporada = "Aguas frescas";
+        break;
+
+      case 6: // Junio
+      case 7: // Julio
+      case 8: // Agosto
+        categoriaTemporada = "Batidos"; 
+        break;
+
+      case 9:  // Septiembre
+      case 10: // Octubre
+      case 11: // Noviembre
+        categoriaTemporada = "Con alcohol"; 
+        break;
+
+      default:
+        categoriaTemporada = "Jugos Clasicos";
+    }
+    final List<Bebida> bebidasCarousel = bebidaProvider.getBebidasPorCategoria(categoriaTemporada);
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),

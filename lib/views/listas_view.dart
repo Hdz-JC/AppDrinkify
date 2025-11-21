@@ -14,12 +14,17 @@ class ListasView extends StatelessWidget {
     final listasProvider = context.watch<ListasProvider>();
     final List<Lista> misListas = listasProvider.misListas;
 
-    return Scaffold(
+    return Scaffold( 
+      
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        title: const Text('Mis Mixes'), // Cambié "Listas" por "Mixes" (suena mejor)
-        centerTitle: true,
+        title: const Text('Mis Mixes',
+          style: TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+        ),
+        ),
       ),
       body: listasProvider.isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -29,11 +34,11 @@ class ListasView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // --- CAMBIO DE ICONO GRANDE ---
-                      const Icon(Icons.liquor, size: 80, color: Colors.grey), 
+                      const Icon(Icons.liquor, size: 80, color: Color.fromARGB(255, 0, 0, 0)), 
                       const SizedBox(height: 16),
                       const Text(
                         'Aún no tienes Mixes creados.',
-                        style: TextStyle(fontSize: 18, color: Colors.grey),
+                        style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)),
                       ),
                       const SizedBox(height: 8),
                       const Padding(
@@ -41,13 +46,14 @@ class ListasView extends StatelessWidget {
                         child: Text(
                           'Ve a la pestaña "Crear" para generar uno nuevo.',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                          style: TextStyle(fontSize: 14, color: Color.fromARGB(255, 0, 0, 0)),
                         ),
                       ),
                     ],
                   ),
                 )
-              : ListView.builder(
+              : SafeArea(
+                child: ListView.builder(
                   itemCount: misListas.length,
                   itemBuilder: (context, index) {
                     final lista = misListas[index];
@@ -55,10 +61,10 @@ class ListasView extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       elevation: 2,
                       child: ListTile(
-                        // --- CAMBIO: ICONO DE LA LISTA ---
+
                         leading: CircleAvatar(
-                          backgroundColor: Colors.deepPurple.shade100,
-                          child: const Icon(Icons.local_bar, color: Colors.deepPurple), 
+                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                          child: const Icon(Icons.local_bar, color: Color.fromRGBO(251, 83, 21, 1)), 
                         ),
                         title: Text(
                           lista.nombre, 
@@ -109,11 +115,11 @@ class ListasView extends StatelessWidget {
                     );
                   },
                 ),
+              ),
       bottomNavigationBar: const BottomNavBar(),
     );
   }
 
-  // (Los diálogos _showRenameDialog y _showDeleteDialog se quedan IGUAL que antes)
   void _showRenameDialog(BuildContext context, Lista lista) {
     final renameController = TextEditingController(text: lista.nombre);
     showDialog(
@@ -127,9 +133,21 @@ class ListasView extends StatelessWidget {
             autofocus: true,
           ),
           actions: [
-            TextButton(child: const Text('Cancelar'), onPressed: () => Navigator.pop(ctx)),
+            TextButton(
+              child: const Text('Cancelar',
+                style: TextStyle(
+                color: Color.fromARGB(255, 0, 0, 0),
+                ),
+              ), onPressed: () => Navigator.pop(ctx)),
             ElevatedButton(
-              child: const Text('Guardar'),
+                style: ElevatedButton.styleFrom(
+                backgroundColor: Color.fromRGBO(251, 83, 21, 1),
+              ),
+              child: const Text('Guardar',
+                style: TextStyle(
+                color: Color.fromRGBO(255, 255, 255, 1),
+                ),
+              ),
               onPressed: () {
                 if (renameController.text.isNotEmpty) {
                   context.read<ListasProvider>().renameLista(lista.id!, renameController.text);
@@ -151,7 +169,12 @@ class ListasView extends StatelessWidget {
           title: const Text('Eliminar Mix'),
           content: Text('¿Seguro que quieres borrar "${lista.nombre}"?'),
           actions: [
-            TextButton(child: const Text('Cancelar'), onPressed: () => Navigator.pop(ctx)),
+            TextButton(
+              child: const Text('Cancelar',
+                style: TextStyle(
+                color: Color.fromARGB(255, 0, 0, 0),
+                ),
+              ), onPressed: () => Navigator.pop(ctx)),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: const Text('Eliminar', style: TextStyle(color: Colors.white)),
