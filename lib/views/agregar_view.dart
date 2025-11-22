@@ -157,6 +157,7 @@ class _AgregarViewState extends State<AgregarView> {
                   const SizedBox(height: 8),
 
                   ListView.builder(
+                    shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: _categoriasDisponibles.length,
                     itemBuilder: (context, index) {

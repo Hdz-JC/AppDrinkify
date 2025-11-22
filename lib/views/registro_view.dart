@@ -104,11 +104,6 @@ class RegistroView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-      /*appBar: AppBar(
-        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
-        title: const Text('Registro de Usuario'),
-        centerTitle: true,
-      ),*/
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 30),
