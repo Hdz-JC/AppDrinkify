@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:appdrinkify/controllers/navigation_controller.dart';
 import 'package:appdrinkify/models/bebidas_model.dart';
 import 'package:appdrinkify/providers/bebidas_provider.dart';
 import 'package:provider/provider.dart';
@@ -72,7 +71,7 @@ class _RecomendacionViewState extends State<RecomendacionView> {
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         leading: IconButton(
-          onPressed: () => NavigationController.navigateTo(context, '/home'),
+          onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Recomendación del Día'),

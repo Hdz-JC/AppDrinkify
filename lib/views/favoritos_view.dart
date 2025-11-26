@@ -31,7 +31,7 @@ class FavoritosView extends StatelessWidget {
                   child: Text(
                     'Aún no tienes bebidas favoritas.\n¡Presiona el ❤️ para añadir una!',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
                   ),
                 )
 

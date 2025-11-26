@@ -1,8 +1,7 @@
-// lib/models/lista_model.dart
 class Lista {
   final int? id;
   final String nombre;
-  final String userId; // El ID del usuario que la creó
+  final String userId;
 
   Lista({
     this.id,

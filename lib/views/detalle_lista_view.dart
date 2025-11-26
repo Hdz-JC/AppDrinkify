@@ -55,7 +55,7 @@ class _DetalleListaViewState extends State<DetalleListaView> {
 
           final List<Bebida> bebidas = snapshot.data!;
           
-          return ListView.separated( // Usamos separated para poner una línea divisoria
+          return ListView.separated(
             padding: const EdgeInsets.all(8),
             itemCount: bebidas.length,
             separatorBuilder: (ctx, index) => const Divider(),
@@ -83,10 +83,8 @@ class _DetalleListaViewState extends State<DetalleListaView> {
                   style: const TextStyle(fontWeight: FontWeight.bold)
                 ),
                 
-                // --- CAMBIO: MOSTRAR CATEGORÍA CON ESTILO ---
                 subtitle: Row(
                   children: [
-                    // Pequeño icono de etiqueta
                     const Icon(Icons.label_outline, size: 14, color: Color.fromRGBO(251, 83, 21, 1)),
                     const SizedBox(width: 4),
                     Text(

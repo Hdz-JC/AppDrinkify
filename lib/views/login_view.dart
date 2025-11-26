@@ -1,8 +1,8 @@
+import 'package:appdrinkify/views/inicio_app.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/navigation_controller.dart';
 import '../models/user_model.dart';
-//import '../config/datasource/sqlite_service.dart';
 import '../providers/auth_provider.dart';
 
 class LoginView extends StatelessWidget {
@@ -21,9 +21,11 @@ class LoginView extends StatelessWidget {
     Future<void> _login() async {
       final email = emailController.text.trim();
       final password = passwordController.text;
+      final messenger = ScaffoldMessenger.of(context);
 
       if (email.isEmpty || password.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        messenger.clearSnackBars();
+        messenger.showSnackBar(
           const SnackBar(content: Text('Todos los campos son obligatorios')),
         );
         return;
@@ -37,13 +39,15 @@ class LoginView extends StatelessWidget {
         UserModel ? user = authProvider.currentUser;
 
         if (user != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          messenger.clearSnackBars();
+          messenger.showSnackBar(
             const SnackBar(content: Text('Login exitoso!')),
           );
           _clearFields();
           NavigationController.navigateTo(context, '/home');
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
+                    messenger.clearSnackBars();
+          messenger.showSnackBar(
             const SnackBar(content: Text('Email o contraseña incorrectos')),
           );
           _clearFields();
@@ -69,7 +73,6 @@ class LoginView extends StatelessWidget {
             ),
               const SizedBox(height: 30),
 
-              // Campo Email
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
@@ -82,7 +85,6 @@ class LoginView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Campo Contraseña
               TextField(
                 controller: passwordController,
                 obscureText: true,
@@ -96,7 +98,6 @@ class LoginView extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // Botón Entrar
               ElevatedButton(
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
@@ -112,9 +113,9 @@ class LoginView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Botón Regresar
               TextButton(
-                onPressed: () => NavigationController.navigateTo(context, '/inicio'),
+                onPressed:() => Navigator.push(context,MaterialPageRoute(builder: (context) => InicioApp()),
+                ),
                 child: const Text('Regresar', style: TextStyle(
                   fontSize: 20,
                   color: Color.fromARGB(255, 0, 0, 0)

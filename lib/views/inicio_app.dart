@@ -1,4 +1,5 @@
-import 'package:appdrinkify/controllers/navigation_controller.dart';
+import 'package:appdrinkify/views/login_view.dart';
+import 'package:appdrinkify/views/registro_view.dart';
 import 'package:flutter/material.dart';
 
 class InicioApp extends StatelessWidget {
@@ -19,9 +20,8 @@ class InicioApp extends StatelessWidget {
             const SizedBox(height: 50),
 
             ElevatedButton(
-              onPressed: () {
-                NavigationController.navigateTo(context, '/login');
-              },
+                onPressed:() => Navigator.push(context,MaterialPageRoute(builder: (context) => LoginView()),
+                ),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 backgroundColor: Color.fromRGBO(251, 83, 21, 1),
@@ -40,9 +40,8 @@ class InicioApp extends StatelessWidget {
             const SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: () {
-                NavigationController.navigateTo(context, '/registro');
-              },
+                onPressed:() => Navigator.push(context,MaterialPageRoute(builder: (context) => RegistroView()),
+                ),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                 backgroundColor: Color.fromRGBO(255, 255, 255, 1),

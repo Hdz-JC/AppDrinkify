@@ -43,25 +43,19 @@ class ListasProvider with ChangeNotifier {
 
   Future<void> createLista(String nombre, List<Categoria> categorias) async {
     if (_currentUserId == null) return;
-    
-    // Convertir lista de objetos Categoria a lista de IDs (int)
+
     final List<int> categoriaIds = categorias.map((c) => c.id!).toList();
-    
-    // Llamar al servicio de BD
+
     final Lista nuevaLista = await _sqliteService.createLista(nombre, _currentUserId!, categoriaIds);
-    
-    // Añadir a la lista local y notificar
+
     _misListas.add(nuevaLista);
     notifyListeners();
   }
 
   Future<void> renameLista(int listaId, String nuevoNombre) async {
     await _sqliteService.renameLista(listaId, nuevoNombre);
-    
-    // Actualizar la lista local
     final index = _misListas.indexWhere((lista) => lista.id == listaId);
     if (index != -1) {
-      // Recrear el objeto para forzar la actualización
       _misListas[index] = Lista(
         id: _misListas[index].id,
         nombre: nuevoNombre,
@@ -73,13 +67,10 @@ class ListasProvider with ChangeNotifier {
 
   Future<void> deleteLista(int listaId) async {
     await _sqliteService.deleteLista(listaId);
-    
-    // Quitar de la lista local
     _misListas.removeWhere((lista) => lista.id == listaId);
     notifyListeners();
   }
-  
-  // Método para que la vista de detalle obtenga las bebidas
+
   Future<List<Bebida>> getBebidasParaLista(int listaId) {
     return _sqliteService.getBebidasPorLista(listaId);
   }

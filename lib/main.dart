@@ -3,19 +3,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:appdrinkify/providers/auth_provider.dart';
 import 'package:appdrinkify/providers/bebidas_provider.dart';
 import 'package:provider/provider.dart';
-import 'config/routes/app_router.dart'; // Mantengo tu ruta
+import 'config/routes/app_router.dart';
 import 'config/env.dart';
-
-// --- IMPORTS AÑADIDOS ---
 import 'package:appdrinkify/providers/favoritos_provider.dart';
 import 'package:appdrinkify/config/datasource/sqlite_service.dart';
-import 'package:appdrinkify/providers/listas_provider.dart'; // <-- AÑADIR ESTE
-// --- FIN DE IMPORTS ---
+import 'package:appdrinkify/providers/listas_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
    
-  // Inicializar Supabase
   await Supabase.initialize(
     url: Env.supabaseUrl,
     anonKey: Env.supabaseAnonKey,
@@ -27,7 +23,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => BebidaProvider()),
 
-        // Provider de Favoritos (depende de Auth)
         ChangeNotifierProxyProvider<AuthProvider, FavoritosProvider>(
           create: (context) => FavoritosProvider(SqliteService.instance),
           update: (context, auth, previousFavoritos) {
@@ -36,12 +31,9 @@ void main() async {
           },
         ),
 
-        // --- AÑADIR ESTE PROVIDER ---
-        // Provider de Listas (también depende de Auth)
         ChangeNotifierProxyProvider<AuthProvider, ListasProvider>(
           create: (context) => ListasProvider(SqliteService.instance),
           update: (context, auth, previousListas) {
-            // Llama al 'updateUser' de ListasProvider
             previousListas!.updateUser(auth.currentUser?.id);
             return previousListas;
           },

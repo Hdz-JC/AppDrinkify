@@ -10,7 +10,6 @@ class BebidaProvider extends ChangeNotifier {
   List<Bebida> _featuredBebidas = [];
   List<Categoria> _todasCategorias = [];
   bool _isLoading = false;
-  //final Random _random = Random();
 
   bool get isLoading => _isLoading;
   List<Bebida> get listaCompletaBebidas => _listaCompletaBebidas;

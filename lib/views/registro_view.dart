@@ -1,7 +1,7 @@
 import 'package:appdrinkify/controllers/navigation_controller.dart';
+import 'package:appdrinkify/views/inicio_app.dart';
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
-//import '../config/datasource/sqlite_service.dart';
 import '../config/datasource/supabase_service.dart';
 
 
@@ -10,7 +10,6 @@ class RegistroView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Controladores de los campos
     final TextEditingController emailController = TextEditingController();
     final TextEditingController usernameController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
@@ -23,16 +22,11 @@ class RegistroView extends StatelessWidget {
         passwordController.clear();
       }
 
-    //Inicio
     Future<void> register() async {
       final email = emailController.text.trim();
       final username = usernameController.text.trim();
       final password = passwordController.text;
 
-      // 1. Validar Email
-      // Permite letras, números, y ._%+- antes del @
-      // Permite letras, números, y .- después del @
-      // Exige un dominio de 2+ letras (ej. .com)
       final emailRegex =
           RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
       if (!emailRegex.hasMatch(email)) {
@@ -42,10 +36,6 @@ class RegistroView extends StatelessWidget {
         return;
       }
 
-      // 2. Validar Usuario
-      // Debe empezar con letra
-      // Puede contener letras, números, _ o -
-      // Longitud total entre 3 y 20 caracteres
       final userRegex = RegExp(r'^[a-zA-Z][a-zA-Z0-9_-]{2,19}$');
       if (!userRegex.hasMatch(username)) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -56,9 +46,6 @@ class RegistroView extends StatelessWidget {
         return;
       }
 
-      // 3. Validar Contraseña
-      // Acepta cualquier carácter
-      // Longitud mínima de 8 caracteres
       final passRegex = RegExp(r'^.{8,}$');
       if (!passRegex.hasMatch(password)) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -82,7 +69,7 @@ class RegistroView extends StatelessWidget {
             const SnackBar(content: Text('Usuario registrado con éxito!')),
           );
           clearFields();
-          NavigationController.navigateTo(context, '/inicio');
+          NavigationController.navigateTo(context, '/login');
         } else if (!success) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Este email ya está registrado')),
@@ -110,13 +97,11 @@ class RegistroView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //const Icon(Icons.person_add_rounded, size: 120),
               Image.asset("assets/logo/drinkifyblanco.png",
               height: 220,
             ),
               const SizedBox(height: 30),
 
-              // Campo Email
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
@@ -129,7 +114,6 @@ class RegistroView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Campo Usuario
               TextField(
                 controller: usernameController,
                 decoration: InputDecoration(
@@ -142,7 +126,6 @@ class RegistroView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Campo Contraseña
               TextField(
                 controller: passwordController,
                 obscureText: true,
@@ -156,7 +139,6 @@ class RegistroView extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // Botón Registrar
               ElevatedButton(
                 onPressed: register,
                 style: ElevatedButton.styleFrom(
@@ -172,9 +154,9 @@ class RegistroView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-              // Botón Regresar
               TextButton(
-                onPressed: () => NavigationController.navigateTo(context, '/inicio'),
+                onPressed:() => Navigator.push(context,MaterialPageRoute(builder: (context) => InicioApp()),
+                ),
                 child: const Text('Regresar', style: TextStyle(
                   fontSize: 20,
                   color: Color.fromARGB(255, 0, 0, 0)
@@ -188,4 +170,3 @@ class RegistroView extends StatelessWidget {
     );
   }
 }
-

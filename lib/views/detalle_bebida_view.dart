@@ -35,59 +35,66 @@ class DetalleBebidaView extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
-                child: Image.asset(
-                  bebida.imageUrl,
-                  height: 250,
-                  width: 250,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 250,
-                      width: 250,
-                      color: Colors.grey[200],
-                      child: const Icon(Icons.no_photography, color: Colors.grey, size: 100,),
-                    );
-                  },
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0),
+                  child: Image.asset(
+                    bebida.imageUrl,
+                    height: 250,
+                    width: 250,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 250,
+                        width: 250,
+                        color: Colors.grey[200],
+                        child: const Icon(Icons.no_photography, color: Colors.grey, size: 100,),
+                      );
+                    },
+                  ),
                 ),
               ),
-              const SizedBox(height: 16), // Espacio
+              const SizedBox(height: 16),
 
-              Text(
-                bebida.categoria_nombre ?? 'Sin Categoría',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.grey,
+              Center(
+                child: Text(
+                  bebida.categoria_nombre ?? 'Sin Categoría',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
+
               const SizedBox(height: 24),
 
-              const Text(
-                "Instrucciones",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              Center(
+                child: Text(
+                  "Instrucciones",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
+
               const SizedBox(height: 8),
 
               Text(
                 bebida.preparacion,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.left,
                 style: const TextStyle(fontSize: 16),
               ),
             ],
           ),
-        ),
       ),
     );
   }

@@ -1,11 +1,8 @@
-// lib/views/bebidas_por_categoria_view.dart
 import 'package:flutter/material.dart';
 import 'package:appdrinkify/models/bebidas_model.dart';
 import 'package:appdrinkify/views/detalle_bebida_view.dart';
-// --- AÑADIR ESTOS IMPORTS ---
 import 'package:provider/provider.dart';
 import 'package:appdrinkify/providers/favoritos_provider.dart';
-// --- FIN IMPORTS ---
 
 class BebidasPorCategoriaView extends StatelessWidget {
   final List<Bebida> bebidas;
@@ -19,7 +16,6 @@ class BebidasPorCategoriaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // --- AÑADIDO ---
     final favoritosProvider = context.watch<FavoritosProvider>();
 
     return Scaffold(

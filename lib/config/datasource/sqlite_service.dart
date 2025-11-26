@@ -43,7 +43,6 @@ class SqliteService {
     )
     ''');
 
-    // --- AÑADIDO ---
     await db.execute('''
     CREATE TABLE favoritos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,7 +53,6 @@ class SqliteService {
     )
     ''');
 
-    // --- AÑADIDO (v4) ---
     await db.execute('''
     CREATE TABLE listas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -487,10 +485,6 @@ imageUrl: "assets/images/batidos/mango_tropical.jpg",
     }
   }
 
-
-  // --- AÑADIDOS: MÉTODOS CRUD PARA FAVORITOS ---
-
-  // Añadir un favorito
   Future<int> addFavorito(String userId, int bebidaId) async {
     final db = await instance.database;
     try {
@@ -499,12 +493,10 @@ imageUrl: "assets/images/batidos/mango_tropical.jpg",
         'bebida_id': bebidaId,
       });
     } catch (e) {
-      // Ignora el error de 'UNIQUE constraint failed' si ya existe
       return -1;
     }
   }
 
-  // Quitar un favorito
   Future<int> removeFavorito(String userId, int bebidaId) async {
     final db = await instance.database;
     return await db.delete(
@@ -514,10 +506,8 @@ imageUrl: "assets/images/batidos/mango_tropical.jpg",
     );
   }
 
-  // Obtener todas las bebidas favoritas de UN usuario
   Future<List<Bebida>> getFavoritosPorUsuario(String userId) async {
     final db = await instance.database;
-    // La misma consulta JOIN que ya tenías, pero filtrada por favoritos
     final result = await db.rawQuery('''
       SELECT 
         b.id, 

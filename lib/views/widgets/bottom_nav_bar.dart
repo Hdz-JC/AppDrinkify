@@ -16,20 +16,18 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
 
-    // 1. Envolvemos en un Container para poder dibujar la línea negra
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white, // Fondo blanco del contenedor
+        color: Colors.white,
       ),
       child: BottomNavigationBar(
-        backgroundColor: Colors.white, // 2. Fondo blanco de la barra
+        backgroundColor: Colors.white,
         
         currentIndex: _getCurrentIndex(location),
         type: BottomNavigationBarType.fixed,
         
-        // Esto sirve para que los iconos no seleccionados se vean bien sobre blanco
         unselectedItemColor: Colors.grey, 
-        selectedItemColor: const Color.fromRGBO(251, 83, 21, 1), // Tu naranja
+        selectedItemColor: const Color.fromRGBO(251, 83, 21, 1),
         
         onTap: (index) {
           switch (index) {

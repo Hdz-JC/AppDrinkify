@@ -26,7 +26,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    # Registra CADA carpeta de categoría
     - assets/images/aguas_frescas/
     - assets/images/calientes/
     - assets/images/con_alcohol/

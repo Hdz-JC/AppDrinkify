@@ -1,3 +1,5 @@
+import 'package:appdrinkify/views/categorias_view.dart';
+import 'package:appdrinkify/views/recomendacion_view.dart';
 import 'package:flutter/material.dart';
 import 'package:appdrinkify/controllers/navigation_controller.dart';
 import 'widgets/bottom_nav_bar.dart';
@@ -65,6 +67,7 @@ class _HomeViewState extends State<HomeView> {
         categoriaTemporada = "Jugos Clasicos";
     }
     final List<Bebida> bebidasCarousel = bebidaProvider.getBebidasPorCategoria(categoriaTemporada);
+    final messenger = ScaffoldMessenger.of(context);
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(255, 255, 255, 1),
@@ -103,17 +106,15 @@ class _HomeViewState extends State<HomeView> {
                   final String trimmedQuery = query.trim();
                   final RegExp regexTextoValido = RegExp(r'^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$');
                   if (trimmedQuery.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Escribe el nombre de una bebida'),
-                        ),
-              );
+                            messenger.clearSnackBars();
+        messenger.showSnackBar(
+          const SnackBar(content: Text('Escribe el nombre de una bebida')),
+        );
               } else if (!regexTextoValido.hasMatch(trimmedQuery)) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Solo puedes buscar bebidas'),
-                  ),
-                );
+                                            messenger.clearSnackBars();
+        messenger.showSnackBar(
+          const SnackBar(content: Text('Solo puedes buscar bebidas')),
+        );
                 } else {
                   final List<Bebida> resultados = bebidaProvider.buscarBebidas(trimmedQuery);
                   Navigator.push(context,
@@ -157,7 +158,7 @@ class _HomeViewState extends State<HomeView> {
                           child: Image.asset(
                             bebida.imageUrl,
                             width: MediaQuery.of(context).size.width,
-                            height: 200,
+                            height: 300,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 Icon(Icons.no_photography, color: Colors.grey),
@@ -170,13 +171,14 @@ class _HomeViewState extends State<HomeView> {
                       autoPlayInterval: const Duration(seconds: 3),
                       enlargeCenterPage: true,
                       enlargeFactor: 0.3,
-                      height: 200,
+                      height: 280,
                     ),
                   ),
               
               const SizedBox(height: 50),
               ElevatedButton(
-                onPressed:()=> NavigationController.navigateTo(context,'/categorias'),
+                onPressed:() => Navigator.push(context,MaterialPageRoute(builder: (context) => CategoriasView()),
+                ),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 15),
                   backgroundColor: Color.fromRGBO(255, 255, 255, 1),
@@ -189,9 +191,10 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 25),
               ElevatedButton(
-                onPressed:()=> NavigationController.navigateTo(context,'/recomendacion'),
+                onPressed:() => Navigator.push(context,MaterialPageRoute(builder: (context) => RecomendacionView()),
+                ),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   backgroundColor: Color.fromRGBO(255, 255, 255, 1),
