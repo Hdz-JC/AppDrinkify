@@ -1,50 +1,79 @@
+import 'package:appdrinkify/views/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../controllers/navigation_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:appdrinkify/providers/favoritos_provider.dart';
+import 'package:appdrinkify/models/bebidas_model.dart';
+import 'package:appdrinkify/views/detalle_bebida_view.dart';
 
 class FavoritosView extends StatelessWidget {
   const FavoritosView({super.key});
 
-  int _getCurrentIndex(String location) {
-    if (location.startsWith('/favoritos')) return 1;
-    if (location.startsWith('/agregar')) return 2;
-    if (location.startsWith('/listas')) return 3;
-    return 0;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final String location = GoRouterState.of(context).uri.toString();
+    final favoritosProvider = context.watch<FavoritosProvider>();
+    final List<Bebida> listaFavoritos = favoritosProvider.favoritos;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Ventana de Favoritos')),
-      body: const Center(child: Text('Ventana de Favoritos')),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _getCurrentIndex(location),
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              NavigationController.navigateTo(context, '/home');
-              break;
-            case 1:
-              NavigationController.navigateTo(context, '/favoritos');
-              break;
-            case 2:
-              NavigationController.navigateTo(context, '/agregar');
-              break;
-            case 3:
-              NavigationController.navigateTo(context, '/listas');
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoritos'),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Agregar'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Listas'),
-        ],
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        title: const Text('Mis Favoritos',
+          style: TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+        ),
+        )
       ),
+      body: favoritosProvider.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : listaFavoritos.isEmpty
+              ? const Center(
+                  child: Text(
+                    'Aún no tienes bebidas favoritas.\n¡Presiona el ❤️ para añadir una!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 0, 0, 0)),
+                  ),
+                )
+
+              : ListView.builder(
+                  itemCount: listaFavoritos.length,
+                  itemBuilder: (context, index) {
+                    final bebida = listaFavoritos[index];
+                    
+                    return ListTile(
+                      leading: Image.asset(
+                        bebida.imageUrl,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            Icon(Icons.no_photography, color: Colors.grey),
+                      ),
+                      title: Text(bebida.nombre),
+                      subtitle: Text(
+                        bebida.categoria_nombre ?? 'Sin categoría',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.favorite),
+                        color: Colors.red,
+                        onPressed: () {
+                          context.read<FavoritosProvider>().toggleFavorito(bebida);
+                        },
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetalleBebidaView(bebida: bebida),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

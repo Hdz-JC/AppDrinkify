@@ -1,50 +1,196 @@
+import 'package:appdrinkify/views/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import '../controllers/navigation_controller.dart';
+import 'package:provider/provider.dart';
+import 'package:appdrinkify/providers/bebidas_provider.dart';
+import 'package:appdrinkify/providers/listas_provider.dart';
+import 'package:appdrinkify/models/categoria_model.dart';
+import 'package:appdrinkify/controllers/navigation_controller.dart';
 
-class AgregarView extends StatelessWidget {
+class AgregarView extends StatefulWidget {
   const AgregarView({super.key});
 
-  int _getCurrentIndex(String location) {
-    if (location.startsWith('/favoritos')) return 1;
-    if (location.startsWith('/agregar')) return 2;
-    if (location.startsWith('/listas')) return 3;
-    return 0;
+  @override
+  State<AgregarView> createState() => _AgregarViewState();
+}
+
+class _AgregarViewState extends State<AgregarView> {
+  final _nombreController = TextEditingController();
+  final Map<int, bool> _categoriasSeleccionadas = {};
+  List<Categoria> _categoriasDisponibles = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => _cargarCategorias());
+  }
+
+  void _cargarCategorias() {
+    final categorias = context.read<BebidaProvider>().todasCategorias;
+    
+    if (mounted) {
+      setState(() {
+        _categoriasDisponibles = categorias;
+        for (var cat in categorias) {
+          _categoriasSeleccionadas[cat.id!] = false;
+        }
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _nombreController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _crearLista() async {
+    final nombre = _nombreController.text.trim();
+    if (nombre.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ponle un nombre a tu mix')),
+      );
+      return;
+    }
+
+    final validCharacters = RegExp(r'^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ]+$');
+    
+    if (!validCharacters.hasMatch(nombre)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('El nombre solo puede contener letras, números y espacios.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final forbiddenWords = ['select', 'where', 'like', 'drop', 'delete', 'update', 'insert', 'table'];
+    final nombreMinusculas = nombre.toLowerCase();
+
+    for (var word in forbiddenWords) {
+      if (RegExp(r'\b' + word + r'\b').hasMatch(nombreMinusculas)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('La palabra "$word" no está permitida por seguridad.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+    }
+
+    final List<Categoria> seleccionadas = [];
+    for (var cat in _categoriasDisponibles) {
+      if (_categoriasSeleccionadas[cat.id!] == true) {
+        seleccionadas.add(cat);
+      }
+    }
+
+    if (seleccionadas.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Selecciona al menos una categoría')));
+      return;
+    }
+
+    try {
+      await context.read<ListasProvider>().createLista(nombre, seleccionadas);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Playlist "$nombre" creada!')));
+        NavigationController.navigateTo(context, '/listas');
+      }
+
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final String location = GoRouterState.of(context).uri.toString();
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Ventana de Agregar')),
-      body: const Center(child: Text('Ventana de Agregar')),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _getCurrentIndex(location),
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              NavigationController.navigateTo(context, '/home');
-              break;
-            case 1:
-              NavigationController.navigateTo(context, '/favoritos');
-              break;
-            case 2:
-              NavigationController.navigateTo(context, '/agregar');
-              break;
-            case 3:
-              NavigationController.navigateTo(context, '/listas');
-              break;
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favoritos'),
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Agregar'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Listas'),
-        ],
+      backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+        title: const Text('Crear Mix',
+          style: TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+        ),
+        ),
       ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    "Crea tu playlist de bebidas",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Elige un nombre y las categorías. Nosotros seleccionaremos bebidas al azar para ti.",
+                    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  TextField(
+                    controller: _nombreController,
+                    decoration: const InputDecoration(
+                      labelText: 'Nombre del Mix (ej. Fiesta Viernes)',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.edit),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  const Text(
+                    'Categorías a incluir:',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _categoriasDisponibles.length,
+                    itemBuilder: (context, index) {
+                      final categoria = _categoriasDisponibles[index];
+                      return CheckboxListTile(
+                        activeColor: Color.fromRGBO(251, 83, 21, 1),
+                        title: Text(categoria.nombre),
+                        value: _categoriasSeleccionadas[categoria.id!],
+                        onChanged: (bool? value)
+                        {
+                          setState(() {
+                            _categoriasSeleccionadas[categoria.id!] = value ?? false;
+                          });
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 24),
+                  
+                  ElevatedButton.icon(
+                    onPressed: _crearLista,
+                    icon: const Icon(Icons.auto_awesome),
+                    label: const Text('Generar Mix Aleatorio', style: TextStyle(fontSize: 18)),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Color.fromRGBO(251, 83, 21, 1),
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
